@@ -194,6 +194,7 @@ namespace LeadShineDemo.ViewModels
         #endregion
         #region 方法绑定
         public DelegateCommand AppLoadedEventCommand { get; set; }
+        public DelegateCommand AppClosedEventCommand { get; set; }
         public DelegateCommand<object> MenuActionCommand { get; set; }
         public DelegateCommand<object> SvnActionCommand { get; set; }
         public DelegateCommand<object> RstActionCommand { get; set; }
@@ -245,6 +246,7 @@ namespace LeadShineDemo.ViewModels
             }
             #endregion
             AppLoadedEventCommand = new DelegateCommand(new Action(this.AppLoadedEventCommandExecute));
+            AppClosedEventCommand = new DelegateCommand(new Action(this.AppClosedEventCommandExecute));
             MenuActionCommand = new DelegateCommand<object>(new Action<object>(this.MenuActionCommandExecute));
             SvnActionCommand = new DelegateCommand<object>(new Action<object>(this.SvnActionCommandExecute));
             RstActionCommand = new DelegateCommand<object>(new Action<object>(this.RstActionCommandExecute));
@@ -254,6 +256,15 @@ namespace LeadShineDemo.ViewModels
             Axis_Home_Command = new DelegateCommand<object>(new Action<object>(this.Axis_Home_CommandExecute));
             Axis_TechCommand = new DelegateCommand<object>(new Action<object>(this.Axis_TechCommandExecute));
             Axis_GOCommand = new DelegateCommand<object>(new Action<object>(this.Axis_GOCommandExecute));
+        }
+
+        private void AppClosedEventCommandExecute()
+        {
+            try
+            {
+                LTDMC.dmc_board_close();
+            }
+            catch { }
         }
 
         private void Axis_GOCommandExecute(object obj)
@@ -315,6 +326,7 @@ namespace LeadShineDemo.ViewModels
 
         private void AppLoadedEventCommandExecute()
         {
+            LTDMC.dmc_board_init();
             AddMessage("软件加载完成");
         }
         #endregion

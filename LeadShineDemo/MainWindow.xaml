@@ -4,11 +4,32 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:Views="clr-namespace:LeadShineDemo.Views"
         xmlns:local="clr-namespace:LeadShineDemo"
         mc:Ignorable="d"
         Title="{Binding Version,StringFormat=LeadShineDemo {0}}" Icon="LeadShineicon_20201104_64.ico"
         Height="600" Width="800" WindowStartupLocation ="CenterScreen" ResizeMode="CanResize" Closing="MetroWindow_Closing">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding AppLoadedEventCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Menu VerticalAlignment="Center">
+            <MenuItem Header="主页" Command="{Binding MenuActionCommand}" CommandParameter="0"></MenuItem>
+            <MenuItem Header="参数" Command="{Binding MenuActionCommand}" CommandParameter="1"></MenuItem>
+            <MenuItem Header="轴" Command="{Binding MenuActionCommand}" CommandParameter="2"></MenuItem>
+        </Menu>
+        <Grid Grid.Row="1">
+            <Views:HomePage Visibility="{Binding HomePageVisibility,FallbackValue=Visible}"></Views:HomePage>
+            <Views:AxisPage Visibility="{Binding AxisPageVisibility,FallbackValue=Collapsed}"></Views:AxisPage>
+        </Grid>
         
     </Grid>
 </Controls:MetroWindow>

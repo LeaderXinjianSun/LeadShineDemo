@@ -1,0 +1,412 @@
+﻿<UserControl x:Class="LeadShineDemo.Views.AxisPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:local="clr-namespace:LeadShineDemo.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="540" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Dictionary1.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <GroupBox Header="伺服">
+            <StackPanel Orientation="Vertical">
+                <Border BorderThickness="1" BorderBrush="Black" Margin="1">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <Label>X</Label>
+                            <TextBlock Text="{Binding GPos.X,StringFormat=规划位置: {0:F2} mm}" Width="200" FontSize="18"></TextBlock>
+                            <TextBlock Text="{Binding CPos.X,StringFormat=反馈位置: {0:F2} mm}" Width="200" FontSize="18"></TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label>Y</Label>
+                            <TextBlock Text="{Binding GPos.Y,StringFormat=规划位置: {0:F2} mm}" Width="200" FontSize="18"></TextBlock>
+                            <TextBlock Text="{Binding CPos.Y,StringFormat=反馈位置: {0:F2} mm}" Width="200" FontSize="18"></TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label>Z</Label>
+                            <TextBlock Text="{Binding GPos.Z,StringFormat=规划位置: {0:F2} mm}" Width="200" FontSize="18"></TextBlock>
+                            <TextBlock Text="{Binding CPos.Z,StringFormat=反馈位置: {0:F2} mm}" Width="200" FontSize="18"></TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                    
+                </Border>
+                <Border BorderThickness="1" BorderBrush="Black" Margin="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="正限位" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1"></TextBlock>
+                        <TextBlock Text="负限位" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2"></TextBlock>
+                        <TextBlock Text="原点" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="3"></TextBlock>
+                        <TextBlock Text="报警" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="4"></TextBlock>
+                        <TextBlock Text="准备" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="5"></TextBlock>
+                        <TextBlock Text="使能" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="6"></TextBlock>
+                        <TextBlock Text="报警清除" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="7"></TextBlock>
+                        <TextBlock Text="X" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1"></TextBlock>
+                        <Ellipse Style="{StaticResource P_LimitState0}" Grid.Row="1" Grid.Column="1"></Ellipse>
+                        <Ellipse Style="{StaticResource N_LimitState0}" Grid.Row="1" Grid.Column="2"></Ellipse>
+                        <Ellipse Style="{StaticResource HomeState0}" Grid.Row="1" Grid.Column="3"></Ellipse>
+                        <Ellipse Style="{StaticResource AlarmState0}" Grid.Row="1" Grid.Column="4"></Ellipse>
+                        <Ellipse Style="{StaticResource ReadyState0}" Grid.Row="1" Grid.Column="5"></Ellipse>
+                        <ToggleButton Content="SVN" IsChecked="{Binding DMC5400ASVN[0]}" Command="{Binding SvnActionCommand}" CommandParameter="0" Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="50" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="6" Margin="1"></ToggleButton>
+                        <ToggleButton Content="RST" IsChecked="{Binding DMC5400ARST[0]}" Command="{Binding RstActionCommand}" CommandParameter="0" Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="50" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="7" Margin="1"></ToggleButton>
+
+                        <TextBlock Text="Y" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2"></TextBlock>
+                        <Ellipse Style="{StaticResource P_LimitState1}" Grid.Row="2" Grid.Column="1"></Ellipse>
+                        <Ellipse Style="{StaticResource N_LimitState1}" Grid.Row="2" Grid.Column="2"></Ellipse>
+                        <Ellipse Style="{StaticResource HomeState1}" Grid.Row="2" Grid.Column="3"></Ellipse>
+                        <Ellipse Style="{StaticResource AlarmState1}" Grid.Row="2" Grid.Column="4"></Ellipse>
+                        <Ellipse Style="{StaticResource ReadyState1}" Grid.Row="2" Grid.Column="5"></Ellipse>
+                        <ToggleButton Content="SVN" IsChecked="{Binding DMC5400ASVN[1]}" Command="{Binding SvnActionCommand}" CommandParameter="1" Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="50" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="6" Margin="1"></ToggleButton>
+                        <ToggleButton Content="RST" IsChecked="{Binding DMC5400ARST[1]}" Command="{Binding RstActionCommand}" CommandParameter="1" Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="50" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="7" Margin="1"></ToggleButton>
+
+                        <TextBlock Text="Z" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="3"></TextBlock>
+                        <Ellipse Style="{StaticResource P_LimitState2}" Grid.Row="3" Grid.Column="1"></Ellipse>
+                        <Ellipse Style="{StaticResource N_LimitState2}" Grid.Row="3" Grid.Column="2"></Ellipse>
+                        <Ellipse Style="{StaticResource HomeState2}" Grid.Row="3" Grid.Column="3"></Ellipse>
+                        <Ellipse Style="{StaticResource AlarmState2}" Grid.Row="3" Grid.Column="4"></Ellipse>
+                        <Ellipse Style="{StaticResource ReadyState2}" Grid.Row="3" Grid.Column="5"></Ellipse>
+                        <ToggleButton Content="SVN" IsChecked="{Binding DMC5400ASVN[2]}" Command="{Binding SvnActionCommand}" CommandParameter="2" Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="50" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="3" Grid.Column="6" Margin="1"></ToggleButton>
+                        <ToggleButton Content="RST" IsChecked="{Binding DMC5400ARST[2]}" Command="{Binding RstActionCommand}" CommandParameter="2" Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="50" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="3" Grid.Column="7" Margin="1"></ToggleButton>
+                    </Grid>
+                </Border>
+                <Border BorderThickness="1" BorderBrush="Black" Margin="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="正点动" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1"></TextBlock>
+                        <TextBlock Text="反点动" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2"></TextBlock>
+                        <TextBlock Text="急停" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="3"></TextBlock>
+                        <TextBlock Text="回原点" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="5"></TextBlock>
+                        <TextBlock Text="X" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1"></TextBlock>
+                        <Button Grid.Row="1" Grid.Column="1" Margin="1" Style="{StaticResource DebugButtonBase}" Content="Jog+">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseDown">
+                                    <i:InvokeCommandAction Command="{Binding Axis_Jog_P_MouseDown_Command}" CommandParameter="0"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="PreviewMouseUp">
+                                    <i:InvokeCommandAction Command="{Binding Axis_Jog_Stop_Command}" CommandParameter="0"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                        <Button Grid.Row="1" Grid.Column="2" Margin="1" Style="{StaticResource DebugButtonBase}" Content="Jog-">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseDown">
+                                    <i:InvokeCommandAction Command="{Binding Axis_Jog_N_MouseDown_Command}" CommandParameter="0"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="PreviewMouseUp">
+                                    <i:InvokeCommandAction Command="{Binding Axis_Jog_Stop_Command}" CommandParameter="0"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                        <Button Grid.Row="1" Grid.Column="3" Margin="1" Style="{StaticResource DebugButtonBase}" Background="Red" Content="Stop" Command="{Binding Axis_Jog_Stop_Command}" CommandParameter="0"></Button>
+                        <Button Grid.Row="1" Grid.Column="5" Margin="1" Style="{StaticResource DebugButtonBase}" Content="Home" Command="{Binding Axis_Home_Command}" CommandParameter="0"></Button>
+
+                        <TextBlock Text="Y" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2"></TextBlock>
+                        <Button Grid.Row="2" Grid.Column="1" Margin="1" Style="{StaticResource DebugButtonBase}" Content="Jog+">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseDown">
+                                    <i:InvokeCommandAction Command="{Binding Axis_Jog_P_MouseDown_Command}" CommandParameter="1"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="PreviewMouseUp">
+                                    <i:InvokeCommandAction Command="{Binding Axis_Jog_Stop_Command}" CommandParameter="1"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                        <Button Grid.Row="2" Grid.Column="2" Margin="1" Style="{StaticResource DebugButtonBase}" Content="Jog-">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseDown">
+                                    <i:InvokeCommandAction Command="{Binding Axis_Jog_N_MouseDown_Command}" CommandParameter="1"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="PreviewMouseUp">
+                                    <i:InvokeCommandAction Command="{Binding Axis_Jog_Stop_Command}" CommandParameter="1"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                        <Button Grid.Row="2" Grid.Column="3" Margin="1" Style="{StaticResource DebugButtonBase}" Background="Red" Content="Stop" Command="{Binding Axis_Jog_Stop_Command}" CommandParameter="1"></Button>
+                        <Button Grid.Row="2" Grid.Column="5" Margin="1" Style="{StaticResource DebugButtonBase}" Content="Home" Command="{Binding Axis_Home_Command}" CommandParameter="1"></Button>
+
+                        <TextBlock Text="Z" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="3"></TextBlock>
+                        <Button Grid.Row="3" Grid.Column="1" Margin="1" Style="{StaticResource DebugButtonBase}" Content="Jog+">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseDown">
+                                    <i:InvokeCommandAction Command="{Binding Axis_Jog_P_MouseDown_Command}" CommandParameter="2"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="PreviewMouseUp">
+                                    <i:InvokeCommandAction Command="{Binding Axis_Jog_Stop_Command}" CommandParameter="2"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                        <Button Grid.Row="3" Grid.Column="2" Margin="1" Style="{StaticResource DebugButtonBase}" Content="Jog-">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseDown">
+                                    <i:InvokeCommandAction Command="{Binding Axis_Jog_N_MouseDown_Command}" CommandParameter="2"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="PreviewMouseUp">
+                                    <i:InvokeCommandAction Command="{Binding Axis_Jog_Stop_Command}" CommandParameter="2"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                        <Button Grid.Row="3" Grid.Column="3" Margin="1" Style="{StaticResource DebugButtonBase}" Background="Red" Content="Stop" Command="{Binding Axis_Jog_Stop_Command}" CommandParameter="2"></Button>
+                        <Button Grid.Row="3" Grid.Column="5" Margin="1" Style="{StaticResource DebugButtonBase}" Content="Home" Command="{Binding Axis_Home_Command}" CommandParameter="2"></Button>
+                    </Grid>
+                </Border>
+                <Border BorderThickness="1" BorderBrush="Black" Margin="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="1" Text="X" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                        <TextBlock Grid.Column="2" Text="Y" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                        <TextBlock Grid.Column="3" Text="Z" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                        <TextBlock Grid.Row="1" Text="点1" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                        <TextBox Grid.Row="1" Grid.Column="1" Margin="1" HorizontalContentAlignment="Center" Text="{Binding PrefilePos[0].X}"></TextBox>
+                        <TextBox Grid.Row="1" Grid.Column="2" Margin="1" HorizontalContentAlignment="Center" Text="{Binding PrefilePos[0].Y}"></TextBox>
+                        <TextBox Grid.Row="1" Grid.Column="3" Margin="1" HorizontalContentAlignment="Center" Text="{Binding PrefilePos[0].Z}"></TextBox>
+                        <Button Grid.Row="1" Grid.Column="4" Margin="1" Style="{StaticResource DebugButtonBase}" Content="示教" Command="{Binding Axis_TechCommand}" CommandParameter="0"></Button>
+                        <Button Grid.Row="1" Grid.Column="5" Margin="1" Style="{StaticResource DebugButtonBase}" Content="GO" Command="{Binding Axis_GOCommand}" CommandParameter="0"></Button>
+                        <TextBlock Grid.Row="2" Text="点2" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                        <TextBox Grid.Row="2" Grid.Column="1" Margin="1" HorizontalContentAlignment="Center" Text="{Binding PrefilePos[1].X}"></TextBox>
+                        <TextBox Grid.Row="2" Grid.Column="2" Margin="1" HorizontalContentAlignment="Center" Text="{Binding PrefilePos[1].Y}"></TextBox>
+                        <TextBox Grid.Row="2" Grid.Column="3" Margin="1" HorizontalContentAlignment="Center" Text="{Binding PrefilePos[1].Z}"></TextBox>
+                        <Button Grid.Row="2" Grid.Column="4" Margin="1" Style="{StaticResource DebugButtonBase}" Content="示教" Command="{Binding Axis_TechCommand}" CommandParameter="1"></Button>
+                        <Button Grid.Row="2" Grid.Column="5" Margin="1" Style="{StaticResource DebugButtonBase}" Content="GO" Command="{Binding Axis_GOCommand}" CommandParameter="1"></Button>
+                        <TextBlock Grid.Row="3" Text="点3" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                        <TextBox Grid.Row="3" Grid.Column="1" Margin="1" HorizontalContentAlignment="Center" Text="{Binding PrefilePos[2].X}"></TextBox>
+                        <TextBox Grid.Row="3" Grid.Column="2" Margin="1" HorizontalContentAlignment="Center" Text="{Binding PrefilePos[2].Y}"></TextBox>
+                        <TextBox Grid.Row="3" Grid.Column="3" Margin="1" HorizontalContentAlignment="Center" Text="{Binding PrefilePos[2].Z}"></TextBox>
+                        <Button Grid.Row="3" Grid.Column="4" Margin="1" Style="{StaticResource DebugButtonBase}" Content="示教" Command="{Binding Axis_TechCommand}" CommandParameter="2"></Button>
+                        <Button Grid.Row="3" Grid.Column="5" Margin="1" Style="{StaticResource DebugButtonBase}" Content="GO" Command="{Binding Axis_GOCommand}" CommandParameter="2"></Button>
+                        
+                    </Grid>
+
+                </Border>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Grid.Column="1" Margin="1,0,0,0" Header="通用输入/输出">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                            <TextBlock Text="输入0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"></TextBlock>
+                            <Ellipse Style="{StaticResource DMC5400ADi0}"></Ellipse>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                            <TextBlock Text="输入1" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"></TextBlock>
+                            <Ellipse Style="{StaticResource DMC5400ADi1}"></Ellipse>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                            <TextBlock Text="输入2" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"></TextBlock>
+                            <Ellipse Style="{StaticResource DMC5400ADi2}"></Ellipse>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                            <TextBlock Text="输入3" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"></TextBlock>
+                            <Ellipse Style="{StaticResource DMC5400ADi3}"></Ellipse>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                            <TextBlock Text="输入4" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"></TextBlock>
+                            <Ellipse Style="{StaticResource DMC5400ADi4}"></Ellipse>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                            <TextBlock Text="输入5" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"></TextBlock>
+                            <Ellipse Style="{StaticResource DMC5400ADi5}"></Ellipse>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                            <TextBlock Text="输入6" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"></TextBlock>
+                            <Ellipse Style="{StaticResource DMC5400ADi6}"></Ellipse>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                            <TextBlock Text="输入7" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"></TextBlock>
+                            <Ellipse Style="{StaticResource DMC5400ADi7}"></Ellipse>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                            <TextBlock Text="输入8" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"></TextBlock>
+                            <Ellipse Style="{StaticResource DMC5400ADi8}"></Ellipse>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                            <TextBlock Text="输入9" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"></TextBlock>
+                            <Ellipse Style="{StaticResource DMC5400ADi9}"></Ellipse>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                            <TextBlock Text="输入10" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"></TextBlock>
+                            <Ellipse Style="{StaticResource DMC5400ADi10}"></Ellipse>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                            <TextBlock Text="输入11" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"></TextBlock>
+                            <Ellipse Style="{StaticResource DMC5400ADi11}"></Ellipse>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                            <TextBlock Text="输入12" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"></TextBlock>
+                            <Ellipse Style="{StaticResource DMC5400ADi12}"></Ellipse>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                            <TextBlock Text="输入13" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"></TextBlock>
+                            <Ellipse Style="{StaticResource DMC5400ADi13}"></Ellipse>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                            <TextBlock Text="输入14" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"></TextBlock>
+                            <Ellipse Style="{StaticResource DMC5400ADi14}"></Ellipse>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                            <TextBlock Text="输入15" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"></TextBlock>
+                            <Ellipse Style="{StaticResource DMC5400ADi15}"></Ellipse>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <TextBlock Text="输出0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[0]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <TextBlock Text="输出1" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[1]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <TextBlock Text="输出2" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[2]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <TextBlock Text="输出3" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[3]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <TextBlock Text="输出4" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[4]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <TextBlock Text="输出5" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[5]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <TextBlock Text="输出6" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[6]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <TextBlock Text="输出7" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[7]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <TextBlock Text="输出8" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[8]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <TextBlock Text="输出9" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[9]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <TextBlock Text="输出10" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[10]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <TextBlock Text="输出11" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[11]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <TextBlock Text="输出12" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[12]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <TextBlock Text="输出13" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[13]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <TextBlock Text="输出14" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[14]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <TextBlock Text="输出15" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[15]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

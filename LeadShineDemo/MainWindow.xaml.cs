@@ -1,4 +1,6 @@
-﻿using MahApps.Metro.Controls;
+﻿using LeadShineDemo.Models;
+using LeadShineDemo.ViewModels;
+using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,11 +26,23 @@ namespace LeadShineDemo
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = new MainWindowViewModel();
         }
 
-        private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private async void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
+            e.Cancel = true;
+            Metro metro = new Metro();
+            metro.ChangeAccent("Dark.Red");
+            bool r = await metro.ShowConfirm("确认", "你确定关闭软件吗?");
+            if (!r)
+            {
+                metro.ChangeAccent("Light.Blue");
+            }
+            else
+            {
+                System.Windows.Application.Current.Shutdown();
+            }
         }
     }
 }

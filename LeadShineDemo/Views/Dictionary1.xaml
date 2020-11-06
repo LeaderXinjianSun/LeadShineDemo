@@ -1,0 +1,237 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:LeadShineDemo.Views">
+    <Style TargetType="Button" x:Key="DebugButtonBase">
+        <Setter Property="Width" Value="50"></Setter>
+        <Setter Property="Height" Value="30"></Setter>
+        <Setter Property="VerticalAlignment" Value="Center"></Setter>
+        <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+    </Style>
+    <Style TargetType="Ellipse" x:Key="EllipseStatusBase">
+        <Setter Property="Fill" Value="Red"></Setter>
+        <Setter Property="Width" Value="20"></Setter>
+        <Setter Property="Height" Value="20"></Setter>
+        <Setter Property="VerticalAlignment" Value="Center"></Setter>
+        <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="P_LimitState0">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ALimP[0]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="N_LimitState0">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ALimN[0]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="HomeState0">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400AHome[0]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="AlarmState0">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400AAlarm[0]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="ReadyState0">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400AReady[0]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="P_LimitState1">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ALimP[1]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="N_LimitState1">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ALimN[1]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="HomeState1">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400AHome[1]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="AlarmState1">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400AAlarm[1]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="ReadyState1">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400AReady[1]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="P_LimitState2">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ALimP[2]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="N_LimitState2">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ALimN[2]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="HomeState2">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400AHome[2]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="AlarmState2">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400AAlarm[2]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="ReadyState2">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400AReady[2]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="DMC5400ADi0">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ADi[0]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="DMC5400ADi1">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ADi[1]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="DMC5400ADi2">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ADi[2]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="DMC5400ADi3">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ADi[3]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="DMC5400ADi4">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ADi[4]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="DMC5400ADi5">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ADi[5]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="DMC5400ADi6">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ADi[6]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="DMC5400ADi7">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ADi[7]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="DMC5400ADi8">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ADi[8]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="DMC5400ADi9">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ADi[9]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="DMC5400ADi10">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ADi[10]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="DMC5400ADi11">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ADi[11]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="DMC5400ADi12">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ADi[12]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="DMC5400ADi13">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ADi[13]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="DMC5400ADi14">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ADi[14]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Ellipse" BasedOn="{StaticResource EllipseStatusBase}" x:Key="DMC5400ADi15">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding DMC5400ADi[15]}" Value="true">
+                <Setter Property="Fill" Value="Green"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

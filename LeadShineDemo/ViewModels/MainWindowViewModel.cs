@@ -207,10 +207,15 @@ namespace LeadShineDemo.ViewModels
         public DelegateCommand<object> Axis_TechCommand { get; set; }
         public DelegateCommand<object> Axis_GOCommand { get; set; }
         public DelegateCommand<object> OutActionCommand { get; set; }
+        public DelegateCommand FuncCommand { get; set; }
+        public DelegateCommand StopCommand { get; set; }
         #endregion
         #region 变量
         ushort _CardID = 0;
         private string iniParameterPath = System.Environment.CurrentDirectory + "\\Parameter.ini";
+        bool runflag = false;
+        int stepnum = 0;
+        bool[] homed = new bool[3];
         private short res;
         public short Res
         {
@@ -281,6 +286,23 @@ namespace LeadShineDemo.ViewModels
             Axis_TechCommand = new DelegateCommand<object>(new Action<object>(this.Axis_TechCommandExecute));
             Axis_GOCommand = new DelegateCommand<object>(new Action<object>(this.Axis_GOCommandExecute));
             OutActionCommand = new DelegateCommand<object>(new Action<object>(this.OutActionCommandExecute));
+            FuncCommand = new DelegateCommand(new Action(this.FuncCommandExecute));
+            StopCommand = new DelegateCommand(new Action(this.StopCommandExecute));
+        }
+
+        private void StopCommandExecute()
+        {
+            runflag = false;
+            Res = LTDMC.dmc_stop(_CardID, 0, 0);
+            Res = LTDMC.dmc_stop(_CardID, 1, 0);
+            Res = LTDMC.dmc_stop(_CardID, 2, 0);
+            stepnum = -1;
+        }
+
+        private void FuncCommandExecute()
+        {
+            runflag = true;
+            stepnum = 0;
         }
 
         private void OutActionCommandExecute(object obj)
@@ -413,6 +435,7 @@ namespace LeadShineDemo.ViewModels
                         System.Threading.Thread.Sleep(500);
                         Res = LTDMC.dmc_set_position(_CardID, axis, 0);
                         Res = LTDMC.dmc_set_encoder(_CardID, axis, 0);
+                        homed[axis] = true;
                     });
                 }
                 else
@@ -474,12 +497,14 @@ namespace LeadShineDemo.ViewModels
             }
         }
 
-        private void SvnActionCommandExecute(object obj)
+        private async void SvnActionCommandExecute(object obj)
         {
             ushort axis = ushort.Parse(obj.ToString());
             if (DMC5400ASVN[axis])
             {
                 Res = LTDMC.dmc_write_sevon_pin(_CardID, axis, 0);
+                await Task.Delay(200);
+                Res = LTDMC.dmc_set_position(_CardID, axis, LTDMC.dmc_get_encoder(_CardID, axis));
             }
             else
             {
@@ -554,6 +579,7 @@ namespace LeadShineDemo.ViewModels
         }
         private async void Run()
         {
+            bool DMC5400ADi_0 = false;
             while (true)
             {
                 try
@@ -587,10 +613,103 @@ namespace LeadShineDemo.ViewModels
                     CPos.Z = (double)(LTDMC.dmc_get_encoder(_CardID, 2)) / 100;
 
                     #endregion
+                    #region 运行函数
+                    if (runflag && DMC5400ASVN[0] && DMC5400ASVN[1] && DMC5400ASVN[2] && homed[0] && homed[1] && homed[2])
+                    {
+                        switch (stepnum)
+                        {
+                            case 0:
+                                Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 50000, 0.1, 0.1, 1000);
+
+                                Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[0].X * 100), 1);
+                                Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[0].Y * 100), 1);
+                                Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[0].Z * 100), 1);
+
+                                stepnum = 1;
+                                break;
+                            case 1:
+                                if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                {
+                                    stepnum = 2;
+                                }
+                                break;
+                            case 2:
+                                await Task.Delay(1);
+                                stepnum = 3;
+                                break;
+                            case 3:
+                                Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 50000, 0.1, 0.1, 1000);
+
+                                Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[1].X * 100), 1);
+                                Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[1].Y * 100), 1);
+                                Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[1].Z * 100), 1);
+
+                                stepnum = 4;
+                                break;
+                            case 4:
+                                if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                {
+                                    stepnum = 5;
+                                }
+                                break;
+                            case 5:
+                                await Task.Delay(1);
+                                stepnum = 6;
+                                break;
+                            case 6:
+                                Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 50000, 0.1, 0.1, 1000);
+
+                                Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[2].X * 100), 1);
+                                Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[2].Y * 100), 1);
+                                Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[2].Z * 100), 1);
+
+                                stepnum = 7;
+                                break;
+                            case 7:
+                                if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                {
+                                    stepnum = 8;
+                                }
+                                break;
+                            case 8:
+                                await Task.Delay(1);
+                                stepnum = 0;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    if (DMC5400ADi_0 != DMC5400ADi[0])
+                    {
+                        DMC5400ADi_0 = DMC5400ADi[0];
+                        if (DMC5400ADi[0])
+                        {
+                            runflag = false;
+                            Res = LTDMC.dmc_stop(_CardID, 0, 0);
+                            Res = LTDMC.dmc_stop(_CardID, 1, 0);
+                            Res = LTDMC.dmc_stop(_CardID, 2, 0);
+                            stepnum = -1;
+                            DMC5400ASVN[0] = false;
+                            DMC5400ASVN[1] = false;
+                            DMC5400ASVN[2] = false;
+                            Res = LTDMC.dmc_write_sevon_pin(_CardID, 0, 1);
+                            Res = LTDMC.dmc_write_sevon_pin(_CardID, 1, 1);
+                            Res = LTDMC.dmc_write_sevon_pin(_CardID, 2, 1);
+                            AddMessage("急停按钮 按下");
+                        }
+                    }
+                    #endregion
+
                 }
                 catch { }
 
-                await Task.Delay(100);
+                await Task.Delay(10);
             }
         }
         #endregion

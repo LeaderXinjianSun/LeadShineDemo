@@ -347,63 +347,63 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
                         <TextBlock Text="输出1" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
-                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[1]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[1]}" Command="{Binding OutActionCommand}" CommandParameter="1"></ToggleButton>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
                         <TextBlock Text="输出2" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
-                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[2]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[2]}" Command="{Binding OutActionCommand}" CommandParameter="2"></ToggleButton>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
                         <TextBlock Text="输出3" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
-                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[3]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[3]}" Command="{Binding OutActionCommand}" CommandParameter="3"></ToggleButton>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
                         <TextBlock Text="输出4" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
-                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[4]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[4]}" Command="{Binding OutActionCommand}" CommandParameter="4"></ToggleButton>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
                         <TextBlock Text="输出5" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
-                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[5]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[5]}" Command="{Binding OutActionCommand}" CommandParameter="5"></ToggleButton>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
                         <TextBlock Text="输出6" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
-                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[6]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[6]}" Command="{Binding OutActionCommand}" CommandParameter="6"></ToggleButton>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
                         <TextBlock Text="输出7" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
-                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[7]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[7]}" Command="{Binding OutActionCommand}" CommandParameter="7"></ToggleButton>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
                         <TextBlock Text="输出8" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
-                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[8]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[8]}" Command="{Binding OutActionCommand}" CommandParameter="8"></ToggleButton>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
                         <TextBlock Text="输出9" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
-                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[9]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[9]}" Command="{Binding OutActionCommand}" CommandParameter="9"></ToggleButton>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
                         <TextBlock Text="输出10" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
-                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[10]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[10]}" Command="{Binding OutActionCommand}" CommandParameter="10"></ToggleButton>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
                         <TextBlock Text="输出11" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
-                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[11]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[11]}" Command="{Binding OutActionCommand}" CommandParameter="11"></ToggleButton>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
                         <TextBlock Text="输出12" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
-                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[12]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[12]}" Command="{Binding OutActionCommand}" CommandParameter="12"></ToggleButton>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
                         <TextBlock Text="输出13" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
-                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[13]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[13]}" Command="{Binding OutActionCommand}" CommandParameter="13"></ToggleButton>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
                         <TextBlock Text="输出14" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
-                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[14]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[14]}" Command="{Binding OutActionCommand}" CommandParameter="14"></ToggleButton>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
                         <TextBlock Text="输出15" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80"></TextBlock>
-                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[15]}" Command="{Binding OutActionCommand}" CommandParameter="0"></ToggleButton>
+                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" Width="20" Height="20" IsChecked="{Binding DMC5400ADo[15]}" Command="{Binding OutActionCommand}" CommandParameter="15"></ToggleButton>
                     </StackPanel>
                 </StackPanel>
             </Grid>

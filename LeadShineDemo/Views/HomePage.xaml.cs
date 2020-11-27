@@ -23,6 +23,7 @@ namespace LeadShineDemo.Views
         public HomePage()
         {
             InitializeComponent();
+            Global.ImageViewer1 = this.ImageViewer1;
         }
 
         private void MsgTextBox_TextChanged(object sender, TextChangedEventArgs e)

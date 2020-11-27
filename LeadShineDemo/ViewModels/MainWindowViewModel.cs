@@ -9,6 +9,11 @@ using csLTDMC;
 using System.Collections.ObjectModel;
 using System.Windows.Forms;
 using LeadShineDemo.Model;
+using ScreenShotDemo;
+using System.Drawing;
+using Hanbo.Helper;
+using ViewROI;
+using HalconDotNet;
 
 namespace LeadShineDemo.ViewModels
 {
@@ -192,7 +197,72 @@ namespace LeadShineDemo.ViewModels
                 this.RaisePropertyChanged("DMC5400ADo");
             }
         }
+        private double weightValue;
 
+        public double WeightValue
+        {
+            get { return weightValue; }
+            set
+            {
+                weightValue = value;
+                this.RaisePropertyChanged("WeightValue");
+            }
+        }
+        private HImage cameraIamge;
+
+        public HImage CameraIamge
+        {
+            get { return cameraIamge; }
+            set
+            {
+                cameraIamge = value;
+                this.RaisePropertyChanged("CameraIamge");
+            }
+        }
+        private bool cameraRepaint;
+
+        public bool CameraRepaint
+        {
+            get { return cameraRepaint; }
+            set
+            {
+                cameraRepaint = value;
+                this.RaisePropertyChanged("CameraRepaint");
+            }
+        }
+        private ObservableCollection<ROI> cameraROIList;
+
+        public ObservableCollection<ROI> CameraROIList
+        {
+            get { return cameraROIList; }
+            set
+            {
+                cameraROIList = value;
+                this.RaisePropertyChanged("CameraROIList");
+            }
+        }
+        private HObject cameraAppendHObject;
+
+        public HObject CameraAppendHObject
+        {
+            get { return cameraAppendHObject; }
+            set
+            {
+                cameraAppendHObject = value;
+                this.RaisePropertyChanged("CameraAppendHObject");
+            }
+        }
+        private Tuple<string, object> cameraGCStyle;
+
+        public Tuple<string, object> CameraGCStyle
+        {
+            get { return cameraGCStyle; }
+            set
+            {
+                cameraGCStyle = value;
+                this.RaisePropertyChanged("CameraGCStyle");
+            }
+        }
         #endregion
         #region 方法绑定
         public DelegateCommand AppLoadedEventCommand { get; set; }
@@ -228,6 +298,7 @@ namespace LeadShineDemo.ViewModels
                 }
             }
         }
+        ScreenCapture screenCapture = new ScreenCapture();
         #endregion
         #region 构造函数
         public MainWindowViewModel()
@@ -273,6 +344,7 @@ namespace LeadShineDemo.ViewModels
                     Z = double.Parse(Inifile.INIGetStringValue(iniParameterPath, "Position", $"Z{i}", "0"))
                 });
             }
+            CameraROIList = new ObservableCollection<ROI>();
             #endregion
             AppLoadedEventCommand = new DelegateCommand(new Action(this.AppLoadedEventCommandExecute));
             AppClosedEventCommand = new DelegateCommand(new Action(this.AppClosedEventCommandExecute));
@@ -288,6 +360,12 @@ namespace LeadShineDemo.ViewModels
             OutActionCommand = new DelegateCommand<object>(new Action<object>(this.OutActionCommandExecute));
             FuncCommand = new DelegateCommand(new Action(this.FuncCommandExecute));
             StopCommand = new DelegateCommand(new Action(this.StopCommandExecute));
+            System.Diagnostics.Process[] myProcesses = System.Diagnostics.Process.GetProcessesByName("LeadShineDemo");//获取指定的进程名   
+            if (myProcesses.Length > 1) //如果可以获取到知道的进程名则说明已经启动
+            {
+                System.Windows.MessageBox.Show("不允许重复打开软件", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                System.Windows.Application.Current.Shutdown();
+            }
         }
 
         private void StopCommandExecute()
@@ -301,8 +379,20 @@ namespace LeadShineDemo.ViewModels
 
         private void FuncCommandExecute()
         {
-            runflag = true;
-            stepnum = 0;
+            //runflag = true;
+            //stepnum = 0;
+
+            //System.Diagnostics.Process[] myProcesses = System.Diagnostics.Process.GetProcessesByName("USBKB");//获取指定的进程名   
+            //if (myProcesses.Length >= 1) //如果可以获取到知道的进程名则说明已经启动
+            //{
+            //    var image = screenCapture.CaptureWindow(myProcesses[0].MainWindowHandle);
+
+            var image = screenCapture.CaptureScreen();
+            var bitmap = new System.Drawing.Bitmap(image);
+            CameraIamge = ImageConventer.ConvertBitmapToHalconImage(bitmap);
+            //}
+
+
         }
 
         private void OutActionCommandExecute(object obj)
@@ -339,7 +429,7 @@ namespace LeadShineDemo.ViewModels
 
         private void Axis_GOCommandExecute(object obj)
         {
-            if (MessageBox.Show($"是否运动到点{int.Parse(obj.ToString()) + 1}？", "确认", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            if (System.Windows.Forms.MessageBox.Show($"是否运动到点{int.Parse(obj.ToString()) + 1}？", "确认", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
                 if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
                 {
@@ -375,7 +465,7 @@ namespace LeadShineDemo.ViewModels
 
         private void Axis_TechCommandExecute(object obj)
         {
-            if (MessageBox.Show($"是否示教点{int.Parse(obj.ToString()) + 1}？", "确认", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            if (System.Windows.Forms.MessageBox.Show($"是否示教点{int.Parse(obj.ToString()) + 1}？", "确认", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
                 PrefilePos[int.Parse(obj.ToString())].X = CPos.X;
                 PrefilePos[int.Parse(obj.ToString())].Y = CPos.Y;
@@ -389,7 +479,7 @@ namespace LeadShineDemo.ViewModels
         private void Axis_Home_CommandExecute(object obj)
         {
             ushort axis = ushort.Parse(obj.ToString());
-            if (MessageBox.Show("是否回原点？", "确认", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            if (System.Windows.Forms.MessageBox.Show("是否回原点？", "确认", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
                 if (LTDMC.dmc_check_done(_CardID, axis) == 1)
                 {
@@ -552,8 +642,27 @@ namespace LeadShineDemo.ViewModels
                     Res = LTDMC.dmc_download_configfile(_CardID, "Motion.ini");
                     if (Res == 0)
                     {
-                        AddMessage("软件加载完成");
-                        Run();
+                        Res = LTDMC.nmc_set_connect_state(_CardID, 1, 1, 0);
+                        if (Res != 0)
+                        {
+                            AddMessage("CANOpen异常");
+                        }
+                        else
+                        {
+                            ushort NodeNum = 0, _state = 0;
+                            LTDMC.nmc_get_connect_state(_CardID, ref NodeNum, ref _state);
+                            if (_state != 1)
+                            {
+                                AddMessage("CANOpen异常");
+                            }
+                            else
+                            {
+                                LTDMC.nmc_set_ad_mode(_CardID, 1, 0, 1, 0);           
+                                AddMessage("软件加载完成");
+                                Run();
+                            }
+
+                        }
                     }
 
                 }
@@ -580,6 +689,7 @@ namespace LeadShineDemo.ViewModels
         private async void Run()
         {
             bool DMC5400ADi_0 = false;
+            bool presurefirst = false;double _value1 = 0;
             while (true)
             {
                 try
@@ -613,72 +723,85 @@ namespace LeadShineDemo.ViewModels
                     CPos.Z = (double)(LTDMC.dmc_get_encoder(_CardID, 2)) / 100;
 
                     #endregion
+                    #region 模拟量
+                    double _value = 0;
+                    LTDMC.nmc_get_ad_input(_CardID, 1, 0, ref _value);
+                    if (!presurefirst)
+                    {
+                        _value1 = _value;
+                        presurefirst = true;
+                    }
+                    WeightValue = (_value - _value1) / 16 * 1000;
+                    #endregion
                     #region 运行函数
                     if (runflag && DMC5400ASVN[0] && DMC5400ASVN[1] && DMC5400ASVN[2] && homed[0] && homed[1] && homed[2])
                     {
                         switch (stepnum)
                         {
                             case 0:
-                                Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
-                                Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
-                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 50000, 0.1, 0.1, 1000);
+                                //Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
+                                //Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 10000, 0.01, 0.01, 1000);
 
-                                Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[0].X * 100), 1);
-                                Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[0].Y * 100), 1);
+                                //Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[0].X * 100), 1);
+                                //Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[0].Y * 100), 1);
                                 Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[0].Z * 100), 1);
 
                                 stepnum = 1;
                                 break;
                             case 1:
-                                if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                //if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                if (LTDMC.dmc_check_done(_CardID, 2) == 1)
                                 {
                                     stepnum = 2;
                                 }
                                 break;
                             case 2:
-                                await Task.Delay(1);
+                                await Task.Delay(1000);
                                 stepnum = 3;
                                 break;
                             case 3:
-                                Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
-                                Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
-                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 50000, 0.1, 0.1, 1000);
+                                //Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
+                                //Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 10000, 0.01, 0.01, 1000);
 
-                                Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[1].X * 100), 1);
-                                Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[1].Y * 100), 1);
+                                //Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[1].X * 100), 1);
+                                //Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[1].Y * 100), 1);
                                 Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[1].Z * 100), 1);
 
                                 stepnum = 4;
                                 break;
                             case 4:
-                                if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                //if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                if (LTDMC.dmc_check_done(_CardID, 2) == 1)
                                 {
                                     stepnum = 5;
                                 }
                                 break;
                             case 5:
-                                await Task.Delay(1);
-                                stepnum = 6;
+                                await Task.Delay(1000);
+                                stepnum = 0;
                                 break;
                             case 6:
-                                Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
-                                Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
+                                //Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
+                                //Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
                                 Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 50000, 0.1, 0.1, 1000);
 
-                                Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[2].X * 100), 1);
-                                Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[2].Y * 100), 1);
+                                //Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[2].X * 100), 1);
+                                //Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[2].Y * 100), 1);
                                 Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[2].Z * 100), 1);
 
                                 stepnum = 7;
                                 break;
                             case 7:
-                                if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                //if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                if (LTDMC.dmc_check_done(_CardID, 2) == 1)
                                 {
                                     stepnum = 8;
                                 }
                                 break;
                             case 8:
-                                await Task.Delay(1);
+                                await Task.Delay(1000);
                                 stepnum = 0;
                                 break;
                             default:

@@ -32,12 +32,14 @@ namespace LeadShineDemo
         private async void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = true;
+            Global.ImageViewer1.Visibility = Visibility.Collapsed;
             Metro metro = new Metro();
             metro.ChangeAccent("Dark.Red");
             bool r = await metro.ShowConfirm("确认", "你确定关闭软件吗?");
             if (!r)
             {
                 metro.ChangeAccent("Light.Blue");
+                Global.ImageViewer1.Visibility = Visibility.Visible;
             }
             else
             {

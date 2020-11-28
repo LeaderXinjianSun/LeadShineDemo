@@ -8,6 +8,9 @@
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="540" d:DesignWidth="800">
+    <UserControl.Resources>
+        <local:CodeToHex x:Key="CodeToHexConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"></RowDefinition>
@@ -18,7 +21,23 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid Margin="1">
-            
+            <StackPanel>
+                <Border BorderThickness="1" CornerRadius="4" Padding="3" BorderBrush="LightGray" Height="300" Width="928">
+                    <local:KeymapView IsTabStop="False"/>
+                </Border>
+                <Border BorderThickness="1" CornerRadius="4" Padding="3" BorderBrush="LightGray">
+                    <DockPanel>
+                        <Label Content="{Binding ScanCode, Converter={StaticResource CodeToHexConverter}}" ContentStringFormat="Scan Code: {0}    "/>
+                        <Label Content="{Binding VitualCode, Converter={StaticResource CodeToHexConverter}}" ContentStringFormat="Windows Code: {0}    "/>
+                        <Label Content="{Binding KeyName}" ContentStringFormat="Name: {0}    "/>
+                        <Button Width="100" Content="Reset" Margin="2 2 2 2" IsTabStop="False" DockPanel.Dock="Right"
+                        Command="{Binding ResetCommand}"/>
+                        <!--<CheckBox Content="Trap all keystrokes" IsChecked="{Binding Path=Trapped, Mode=TwoWay}" 
+                          DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Right" IsTabStop="False"/>-->
+                    </DockPanel>
+                </Border>
+            </StackPanel>
+
         </Grid>
         <TextBox Grid.Row="1" VerticalAlignment="Stretch" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Margin="1" x:Name="MsgTextBox" IsReadOnly="True" TextChanged="MsgTextBox_TextChanged"  FontSize="14" Background="Black" FontFamily="宋体" Foreground="White" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Text="{Binding MessageStr}"></TextBox>
         <Grid Grid.Column="1" Grid.RowSpan="2">

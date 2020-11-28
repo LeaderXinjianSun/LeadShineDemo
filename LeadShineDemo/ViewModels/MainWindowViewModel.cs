@@ -238,6 +238,50 @@ namespace LeadShineDemo.ViewModels
                 this.RaisePropertyChanged("SelfWeightValue");
             }
         }
+        private ObservableCollection<KeyViewModel> keys;
+
+        public ObservableCollection<KeyViewModel> Keys
+        {
+            get { return keys; }
+            set
+            {
+                keys = value;
+                this.RaisePropertyChanged("Keys");
+            }
+        }
+        private int vitualCode;
+
+        public int VitualCode
+        {
+            get { return vitualCode; }
+            set
+            {
+                vitualCode = value;
+                this.RaisePropertyChanged("VitualCode");
+            }
+        }
+        private int scanCode;
+
+        public int ScanCode
+        {
+            get { return scanCode; }
+            set
+            {
+                scanCode = value;
+                this.RaisePropertyChanged("ScanCode");
+            }
+        }
+        private string keyName;
+
+        public string KeyName
+        {
+            get { return keyName; }
+            set
+            {
+                keyName = value;
+                this.RaisePropertyChanged("KeyName");
+            }
+        }
 
         #endregion
         #region 方法绑定
@@ -257,6 +301,7 @@ namespace LeadShineDemo.ViewModels
         public DelegateCommand StopCommand { get; set; }
         public DelegateCommand GetSelfWeightValueCommand { get; set; }
         public DelegateCommand<object> OperateButtonCommand { get; set; }
+        public DelegateCommand ResetCommand { get; set; }
         #endregion
         #region 变量
         ushort _CardID = 0;
@@ -265,6 +310,9 @@ namespace LeadShineDemo.ViewModels
         int stepnum = 0;
         bool[] homed = new bool[3];
         bool collect = false;
+        KeyboardListener Listener = new KeyboardListener();
+        List<KeyInfo> keymap;
+        List<Keycode> keycodes;
         private short res;
         public short Res
         {
@@ -334,7 +382,23 @@ namespace LeadShineDemo.ViewModels
                         Values = new ChartValues<double>()
                     }
                 };
-            
+            Keys = new ObservableCollection<KeyViewModel>();
+            keymap = Utils.getKeymap();
+            keycodes = Utils.getKeycodes();
+            foreach (var k in keymap)
+            {
+                Keys.Add(new KeyViewModel()
+                {
+                    Left = k.left * 10,
+                    Top = k.top * 10,
+                    Width = k.width * 10,
+                    Height = k.height * 10,
+                    Pressed = false,
+                    Name = Utils.getKeycodeByVkCode(k.vk_code).name,
+                });
+            }
+            Listener.KeyDown += new RawKeyEventHandler(KeyDown);
+            Listener.KeyUp += new RawKeyEventHandler(KeyUp);
             #endregion
             AppLoadedEventCommand = new DelegateCommand(new Action(this.AppLoadedEventCommandExecute));
             AppClosedEventCommand = new DelegateCommand(new Action(this.AppClosedEventCommandExecute));
@@ -352,6 +416,61 @@ namespace LeadShineDemo.ViewModels
             StopCommand = new DelegateCommand(new Action(this.StopCommandExecute));
             GetSelfWeightValueCommand = new DelegateCommand(new Action(this.GetSelfWeightValueCommandExecute));
             OperateButtonCommand = new DelegateCommand<object>(new Action<object>(this.OperateButtonCommandCommandExecute));
+            ResetCommand = new DelegateCommand(new Action(this.ResetCommandExecute));
+        }
+
+        private void ResetCommandExecute()
+        {
+            foreach (var k in Keys)
+            {
+                k.Pressed = false;
+            }
+        }
+
+        private void KeyUp(object sender, RawKeyEventArgs args)
+        {
+            int vk_code = args.VKCode;
+            int sc_code = Utils.VkToSc(vk_code);
+
+            for (int i = 0; i < keymap.Count; i++)
+            {
+                var k = keymap[i];
+                if (k.vk_code == vk_code)
+                {
+                    Keys[i].Pressing = false;
+                    Keys[i].Pressed = true;
+                    break;
+                }
+            }
+        }
+
+        private void KeyDown(object sender, RawKeyEventArgs args)
+        {
+            int vk_code = args.VKCode;
+
+            VitualCode = vk_code;
+            ScanCode = 0;
+            KeyName = "";
+
+            for (int i = 0; i < keymap.Count; i++)
+            {
+                var k = keymap[i];
+                if (k.vk_code == vk_code)
+                {
+                    Keys[i].Pressing = true;
+                    break;
+                }
+            }
+
+            for (int i = 0; i < keycodes.Count; i++)
+            {
+                var keycode = keycodes[i];
+                if (keycode.vk_code == vk_code)
+                {
+                    ScanCode = keycode.sc_code;
+                    KeyName = keycode.name;
+                }
+            }
         }
 
         private void OperateButtonCommandCommandExecute(object obj)

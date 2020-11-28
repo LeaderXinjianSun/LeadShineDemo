@@ -192,7 +192,17 @@ namespace LeadShineDemo.ViewModels
                 this.RaisePropertyChanged("DMC5400ADo");
             }
         }
+        private double weightValue;
 
+        public double WeightValue
+        {
+            get { return weightValue; }
+            set
+            {
+                weightValue = value;
+                this.RaisePropertyChanged("WeightValue");
+            }
+        }
         #endregion
         #region 方法绑定
         public DelegateCommand AppLoadedEventCommand { get; set; }
@@ -552,8 +562,27 @@ namespace LeadShineDemo.ViewModels
                     Res = LTDMC.dmc_download_configfile(_CardID, "Motion.ini");
                     if (Res == 0)
                     {
-                        AddMessage("软件加载完成");
-                        Run();
+                        Res = LTDMC.nmc_set_connect_state(_CardID, 1, 1, 0);
+                        if (Res != 0)
+                        {
+                            AddMessage("CANOpen异常");
+                        }
+                        else
+                        {
+                            ushort NodeNum = 0, _state = 0;
+                            LTDMC.nmc_get_connect_state(_CardID, ref NodeNum, ref _state);
+                            if (_state != 1)
+                            {
+                                AddMessage("CANOpen异常");
+                            }
+                            else
+                            {
+                                LTDMC.nmc_set_ad_mode(_CardID, 1, 0, 1, 0);           
+                                AddMessage("软件加载完成");
+                                Run();
+                            }
+
+                        }
                     }
 
                 }
@@ -580,6 +609,7 @@ namespace LeadShineDemo.ViewModels
         private async void Run()
         {
             bool DMC5400ADi_0 = false;
+            bool presurefirst = false;double _value1 = 0;
             while (true)
             {
                 try
@@ -613,72 +643,85 @@ namespace LeadShineDemo.ViewModels
                     CPos.Z = (double)(LTDMC.dmc_get_encoder(_CardID, 2)) / 100;
 
                     #endregion
+                    #region 模拟量
+                    double _value = 0;
+                    LTDMC.nmc_get_ad_input(_CardID, 1, 0, ref _value);
+                    if (!presurefirst)
+                    {
+                        _value1 = _value;
+                        presurefirst = true;
+                    }
+                    WeightValue = (_value - _value1) / 16 * 1000;
+                    #endregion
                     #region 运行函数
                     if (runflag && DMC5400ASVN[0] && DMC5400ASVN[1] && DMC5400ASVN[2] && homed[0] && homed[1] && homed[2])
                     {
                         switch (stepnum)
                         {
                             case 0:
-                                Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
-                                Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
-                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 50000, 0.1, 0.1, 1000);
+                                //Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
+                                //Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 10000, 0.01, 0.01, 1000);
 
-                                Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[0].X * 100), 1);
-                                Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[0].Y * 100), 1);
+                                //Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[0].X * 100), 1);
+                                //Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[0].Y * 100), 1);
                                 Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[0].Z * 100), 1);
 
                                 stepnum = 1;
                                 break;
                             case 1:
-                                if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                //if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                if (LTDMC.dmc_check_done(_CardID, 2) == 1)
                                 {
                                     stepnum = 2;
                                 }
                                 break;
                             case 2:
-                                await Task.Delay(1);
+                                await Task.Delay(1000);
                                 stepnum = 3;
                                 break;
                             case 3:
-                                Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
-                                Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
-                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 50000, 0.1, 0.1, 1000);
+                                //Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
+                                //Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 10000, 0.01, 0.01, 1000);
 
-                                Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[1].X * 100), 1);
-                                Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[1].Y * 100), 1);
+                                //Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[1].X * 100), 1);
+                                //Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[1].Y * 100), 1);
                                 Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[1].Z * 100), 1);
 
                                 stepnum = 4;
                                 break;
                             case 4:
-                                if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                //if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                if (LTDMC.dmc_check_done(_CardID, 2) == 1)
                                 {
                                     stepnum = 5;
                                 }
                                 break;
                             case 5:
-                                await Task.Delay(1);
-                                stepnum = 6;
+                                await Task.Delay(1000);
+                                stepnum = 0;
                                 break;
                             case 6:
-                                Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
-                                Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
+                                //Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
+                                //Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
                                 Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 50000, 0.1, 0.1, 1000);
 
-                                Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[2].X * 100), 1);
-                                Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[2].Y * 100), 1);
+                                //Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[2].X * 100), 1);
+                                //Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[2].Y * 100), 1);
                                 Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[2].Z * 100), 1);
 
                                 stepnum = 7;
                                 break;
                             case 7:
-                                if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                //if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                if (LTDMC.dmc_check_done(_CardID, 2) == 1)
                                 {
                                     stepnum = 8;
                                 }
                                 break;
                             case 8:
-                                await Task.Delay(1);
+                                await Task.Delay(1000);
                                 stepnum = 0;
                                 break;
                             default:

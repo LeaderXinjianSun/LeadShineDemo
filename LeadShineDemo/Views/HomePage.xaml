@@ -51,7 +51,14 @@
                     </Button>
                 </Grid>
             </GroupBox>
-            
+            <GroupBox Grid.Row="1" Header="数据面板">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <Label>压力值：</Label>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding WeightValue,StringFormat={}{0:F1}g}"></TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
         </Grid>
     </Grid>
 </UserControl>

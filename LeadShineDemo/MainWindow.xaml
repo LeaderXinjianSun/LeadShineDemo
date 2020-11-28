@@ -32,6 +32,7 @@
         <Grid Grid.Row="1">
             <Views:HomePage Visibility="{Binding HomePageVisibility,FallbackValue=Visible}"></Views:HomePage>
             <Views:AxisPage Visibility="{Binding AxisPageVisibility,FallbackValue=Collapsed}"></Views:AxisPage>
+            <Views:ParameterPage Visibility="{Binding ParameterPageVisibility,FallbackValue=Collapsed}"></Views:ParameterPage>
         </Grid>
         
     </Grid>

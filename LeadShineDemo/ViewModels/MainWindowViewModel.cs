@@ -9,6 +9,9 @@ using csLTDMC;
 using System.Collections.ObjectModel;
 using System.Windows.Forms;
 using LeadShineDemo.Model;
+using LiveCharts;
+using LiveCharts.Wpf;
+using System.Windows.Media;
 
 namespace LeadShineDemo.ViewModels
 {
@@ -57,6 +60,16 @@ namespace LeadShineDemo.ViewModels
             {
                 axisPageVisibility = value;
                 this.RaisePropertyChanged("AxisPageVisibility");
+            }
+        }
+        public string parameterPageVisibility;
+        public string ParameterPageVisibility
+        {
+            get { return parameterPageVisibility; }
+            set
+            {
+                parameterPageVisibility = value;
+                this.RaisePropertyChanged("ParameterPageVisibility");
             }
         }
         private PointViewModel gPos;
@@ -203,6 +216,29 @@ namespace LeadShineDemo.ViewModels
                 this.RaisePropertyChanged("WeightValue");
             }
         }
+        private SeriesCollection seriesCollection1;
+
+        public SeriesCollection SeriesCollection1
+        {
+            get { return seriesCollection1; }
+            set
+            {
+                seriesCollection1 = value;
+                this.RaisePropertyChanged("SeriesCollection1");
+            }
+        }
+        private double selfWeightValue;
+
+        public double SelfWeightValue
+        {
+            get { return selfWeightValue; }
+            set
+            {
+                selfWeightValue = value;
+                this.RaisePropertyChanged("SelfWeightValue");
+            }
+        }
+
         #endregion
         #region 方法绑定
         public DelegateCommand AppLoadedEventCommand { get; set; }
@@ -219,6 +255,8 @@ namespace LeadShineDemo.ViewModels
         public DelegateCommand<object> OutActionCommand { get; set; }
         public DelegateCommand FuncCommand { get; set; }
         public DelegateCommand StopCommand { get; set; }
+        public DelegateCommand GetSelfWeightValueCommand { get; set; }
+        public DelegateCommand<object> OperateButtonCommand { get; set; }
         #endregion
         #region 变量
         ushort _CardID = 0;
@@ -226,6 +264,7 @@ namespace LeadShineDemo.ViewModels
         bool runflag = false;
         int stepnum = 0;
         bool[] homed = new bool[3];
+        bool collect = false;
         private short res;
         public short Res
         {
@@ -247,6 +286,7 @@ namespace LeadShineDemo.ViewModels
             MessageStr = "";
             HomePageVisibility = "Visible";
             AxisPageVisibility = "Collapsed";
+            ParameterPageVisibility = "Collapsed";
             GPos = new PointViewModel();
             CPos = new PointViewModel();
             DMC5400ALimP = new ObservableCollection<bool>();
@@ -283,6 +323,18 @@ namespace LeadShineDemo.ViewModels
                     Z = double.Parse(Inifile.INIGetStringValue(iniParameterPath, "Position", $"Z{i}", "0"))
                 });
             }
+            SelfWeightValue = double.Parse(Inifile.INIGetStringValue(iniParameterPath, "System", "SelfWeightValue", "0"));
+            SeriesCollection1 = new SeriesCollection(){
+                    new LineSeries
+                    {
+                        Title = "值",
+                        Fill = Brushes.Transparent,
+                        Stroke = Brushes.Red,
+                        PointGeometrySize = 0.1,
+                        Values = new ChartValues<double>()
+                    }
+                };
+            
             #endregion
             AppLoadedEventCommand = new DelegateCommand(new Action(this.AppLoadedEventCommandExecute));
             AppClosedEventCommand = new DelegateCommand(new Action(this.AppClosedEventCommandExecute));
@@ -298,6 +350,28 @@ namespace LeadShineDemo.ViewModels
             OutActionCommand = new DelegateCommand<object>(new Action<object>(this.OutActionCommandExecute));
             FuncCommand = new DelegateCommand(new Action(this.FuncCommandExecute));
             StopCommand = new DelegateCommand(new Action(this.StopCommandExecute));
+            GetSelfWeightValueCommand = new DelegateCommand(new Action(this.GetSelfWeightValueCommandExecute));
+            OperateButtonCommand = new DelegateCommand<object>(new Action<object>(this.OperateButtonCommandCommandExecute));
+        }
+
+        private void OperateButtonCommandCommandExecute(object obj)
+        {
+            switch (obj.ToString())
+            {
+                case "0":
+                    collect = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void GetSelfWeightValueCommandExecute()
+        {
+            double _value1 = 0;
+            LTDMC.nmc_get_ad_input(_CardID, 1, 0, ref _value1);
+            SelfWeightValue = _value1;
+            Inifile.INIWriteValue(iniParameterPath, "System", "SelfWeightValue", SelfWeightValue.ToString());
         }
 
         private void StopCommandExecute()
@@ -313,6 +387,8 @@ namespace LeadShineDemo.ViewModels
         {
             runflag = true;
             stepnum = 0;
+            //Random rd = new Random();
+            //SeriesCollection1[0].Values.Add((double)rd.Next(0,1000));
         }
 
         private void OutActionCommandExecute(object obj)
@@ -387,9 +463,9 @@ namespace LeadShineDemo.ViewModels
         {
             if (MessageBox.Show($"是否示教点{int.Parse(obj.ToString()) + 1}？", "确认", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
-                PrefilePos[int.Parse(obj.ToString())].X = CPos.X;
-                PrefilePos[int.Parse(obj.ToString())].Y = CPos.Y;
-                PrefilePos[int.Parse(obj.ToString())].Z = CPos.Z;
+                PrefilePos[int.Parse(obj.ToString())].X = GPos.X;
+                PrefilePos[int.Parse(obj.ToString())].Y = GPos.Y;
+                PrefilePos[int.Parse(obj.ToString())].Z = GPos.Z;
                 Inifile.INIWriteValue(iniParameterPath, "Position", "X" + obj.ToString(), PrefilePos[int.Parse(obj.ToString())].X.ToString());
                 Inifile.INIWriteValue(iniParameterPath, "Position", "Y" + obj.ToString(), PrefilePos[int.Parse(obj.ToString())].Y.ToString());
                 Inifile.INIWriteValue(iniParameterPath, "Position", "Z" + obj.ToString(), PrefilePos[int.Parse(obj.ToString())].Z.ToString());
@@ -529,10 +605,17 @@ namespace LeadShineDemo.ViewModels
                 case "0":
                     HomePageVisibility = "Visible";
                     AxisPageVisibility = "Collapsed";
+                    ParameterPageVisibility = "Collapsed";
+                    break;
+                case "1":
+                    ParameterPageVisibility = "Visible";
+                    HomePageVisibility = "Collapsed";
+                    AxisPageVisibility = "Collapsed";
                     break;
                 case "2":
                     HomePageVisibility = "Collapsed";
                     AxisPageVisibility = "Visible";
+                    ParameterPageVisibility = "Collapsed";
                     break;
                 default:
                     break;
@@ -609,7 +692,6 @@ namespace LeadShineDemo.ViewModels
         private async void Run()
         {
             bool DMC5400ADi_0 = false;
-            bool presurefirst = false;double _value1 = 0;
             while (true)
             {
                 try
@@ -646,12 +728,7 @@ namespace LeadShineDemo.ViewModels
                     #region 模拟量
                     double _value = 0;
                     LTDMC.nmc_get_ad_input(_CardID, 1, 0, ref _value);
-                    if (!presurefirst)
-                    {
-                        _value1 = _value;
-                        presurefirst = true;
-                    }
-                    WeightValue = (_value - _value1) / 16 * 1000;
+                    WeightValue = (_value - SelfWeightValue) / 16 * 1000;
                     #endregion
                     #region 运行函数
                     if (runflag && DMC5400ASVN[0] && DMC5400ASVN[1] && DMC5400ASVN[2] && homed[0] && homed[1] && homed[2])
@@ -661,46 +738,46 @@ namespace LeadShineDemo.ViewModels
                             case 0:
                                 //Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
                                 //Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
-                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 10000, 0.01, 0.01, 1000);
+                                //Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 10000, 0.01, 0.01, 1000);
 
                                 //Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[0].X * 100), 1);
                                 //Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[0].Y * 100), 1);
-                                Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[0].Z * 100), 1);
+                                //Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[0].Z * 100), 1);
 
-                                stepnum = 1;
+                                //stepnum = 1;
+                                stepnum = 3;
                                 break;
                             case 1:
-                                //if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
-                                if (LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
                                 {
                                     stepnum = 2;
                                 }
                                 break;
                             case 2:
-                                await Task.Delay(1000);
+                                await Task.Delay(100);
                                 stepnum = 3;
                                 break;
                             case 3:
-                                //Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
-                                //Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
                                 Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 10000, 0.01, 0.01, 1000);
 
-                                //Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[1].X * 100), 1);
-                                //Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[1].Y * 100), 1);
-                                Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[1].Z * 100), 1);
+                                Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[1].X * 100), 1);
+                                Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[1].Y * 100), 1);
+                                //Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[1].Z * 100), 1);
+                                Res = LTDMC.dmc_pmove(_CardID, 2, (int)(0), 1);
 
                                 stepnum = 4;
                                 break;
                             case 4:
-                                //if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
-                                if (LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
                                 {
                                     stepnum = 5;
                                 }
                                 break;
                             case 5:
-                                await Task.Delay(1000);
-                                stepnum = 0;
+                                await Task.Delay(100);
+                                stepnum = 6;
                                 break;
                             case 6:
                                 //Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
@@ -709,7 +786,7 @@ namespace LeadShineDemo.ViewModels
 
                                 //Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[2].X * 100), 1);
                                 //Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[2].Y * 100), 1);
-                                Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[2].Z * 100), 1);
+                                Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[1].Z * 100), 1);
 
                                 stepnum = 7;
                                 break;
@@ -718,11 +795,47 @@ namespace LeadShineDemo.ViewModels
                                 if (LTDMC.dmc_check_done(_CardID, 2) == 1)
                                 {
                                     stepnum = 8;
+                                    await Task.Delay(100);
+                                    collect = false;
                                 }
                                 break;
                             case 8:
-                                await Task.Delay(1000);
-                                stepnum = 0;
+                                if (true)
+                                {
+                                    stepnum = 9;
+                                    await Task.Delay(1000);
+                                    collect = true;
+                                }
+                                else
+                                {
+                                    await Task.Delay(100);
+                                }
+                                break;
+                            case 9:
+                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 1000, 0.1, 0.1, 1000);
+
+                                Res = LTDMC.dmc_pmove(_CardID, 2, (int)((PrefilePos[1].Z - 2) * 100), 1);
+                                Task.Run(()=> {
+                                    SeriesCollection1[0].Values.Clear();
+                                    while (collect)
+                                    {
+                                        double _value1 = 0;
+                                        LTDMC.nmc_get_ad_input(_CardID, 1, 0, ref _value1);
+                                        SeriesCollection1[0].Values.Add((double)((_value1 - SelfWeightValue) / 16 * 1000));
+                                        System.Threading.Thread.Sleep(1);
+                                    }
+                                });
+                                stepnum = 10;
+                                break;
+                            case 10:
+                                if (LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                {
+                                    stepnum = 11;
+                                }
+                                break;
+                            case 11:
+                                await Task.Delay(100);
+                                stepnum = 6;
                                 break;
                             default:
                                 break;
@@ -734,6 +847,7 @@ namespace LeadShineDemo.ViewModels
                         if (DMC5400ADi[0])
                         {
                             runflag = false;
+                            collect = false;
                             Res = LTDMC.dmc_stop(_CardID, 0, 0);
                             Res = LTDMC.dmc_stop(_CardID, 1, 0);
                             Res = LTDMC.dmc_stop(_CardID, 2, 0);

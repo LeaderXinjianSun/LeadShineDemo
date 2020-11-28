@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:local="clr-namespace:LeadShineDemo.Views"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="540" d:DesignWidth="800">
     <Grid>
@@ -17,9 +18,7 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid Margin="1">
-            <Grid.Background>
-                <ImageBrush ImageSource="machinedesign_com_sites_machinedesign.com_files_uploads_2013_09_121213_6_Cartesian_robot_supports.png" Stretch="UniformToFill"></ImageBrush>
-            </Grid.Background>
+            
         </Grid>
         <TextBox Grid.Row="1" VerticalAlignment="Stretch" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Margin="1" x:Name="MsgTextBox" IsReadOnly="True" TextChanged="MsgTextBox_TextChanged"  FontSize="14" Background="Black" FontFamily="宋体" Foreground="White" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Text="{Binding MessageStr}"></TextBox>
         <Grid Grid.Column="1" Grid.RowSpan="2">
@@ -44,11 +43,8 @@
                                               Height="40"
                                               Kind="Github" />
                     </Button>
-                    <Button Grid.Column="1" Style="{StaticResource MahApps.Styles.Button.Square.Accent}" Command="{Binding StopCommand}" Margin="10">
-                        <iconPacks:Entypo Width="40"
-                                              Height="40"
-                                              Kind="Back" />
-                    </Button>
+                    <Button Grid.Column="1" FontSize="18" Background="Red" Content="E-&#13;STOP" Command="{Binding StopCommand}" Margin="10"></Button>
+                    <Button Grid.Column="2" FontSize="18" Style="{StaticResource MahApps.Styles.Button.Square.Accent}" Content="采集" Margin="10" Command="{Binding OperateButtonCommand}" CommandParameter="0"></Button>
                 </Grid>
             </GroupBox>
             <GroupBox Grid.Row="1" Header="数据面板">
@@ -57,6 +53,14 @@
                         <Label>压力值：</Label>
                         <TextBlock VerticalAlignment="Center" Text="{Binding WeightValue,StringFormat={}{0:F1}g}"></TextBlock>
                     </StackPanel>
+                    <lvc:CartesianChart Height="200" Series="{Binding SeriesCollection1}">
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Title="压力值（克）"></lvc:Axis>
+                        </lvc:CartesianChart.AxisY>
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Title="采集（次）"></lvc:Axis>
+                        </lvc:CartesianChart.AxisX>
+                    </lvc:CartesianChart>
                 </StackPanel>
             </GroupBox>
         </Grid>

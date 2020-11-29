@@ -27,6 +27,9 @@
                 </Border>
                 <Border BorderThickness="1" CornerRadius="4" Padding="3" BorderBrush="LightGray">
                     <DockPanel>
+                        <Label Content="{Binding MouseX}" ContentStringFormat="X:{0}"></Label>
+                        <Label Content="{Binding MouseY}" ContentStringFormat="Y:{0}"></Label>
+                        <Label Content="{Binding MouseMessage}"></Label>
                         <Label Content="{Binding ScanCode, Converter={StaticResource CodeToHexConverter}}" ContentStringFormat="Scan Code: {0}    "/>
                         <Label Content="{Binding VitualCode, Converter={StaticResource CodeToHexConverter}}" ContentStringFormat="Windows Code: {0}    "/>
                         <Label Content="{Binding KeyName}" ContentStringFormat="Name: {0}    "/>

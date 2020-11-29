@@ -282,6 +282,39 @@ namespace LeadShineDemo.ViewModels
                 this.RaisePropertyChanged("KeyName");
             }
         }
+        private int mouseX;
+
+        public int MouseX
+        {
+            get { return mouseX; }
+            set
+            {
+                mouseX = value;
+                this.RaisePropertyChanged("MouseX");
+            }
+        }
+        private int mouseY;
+
+        public int MouseY
+        {
+            get { return mouseY; }
+            set
+            {
+                mouseY = value;
+                this.RaisePropertyChanged("MouseY");
+            }
+        }
+        private String mouseMessage;
+
+        public String MouseMessage
+        {
+            get { return mouseMessage; }
+            set
+            {
+                mouseMessage = value;
+                this.RaisePropertyChanged("MouseMessage");
+            }
+        }
 
         #endregion
         #region 方法绑定
@@ -311,6 +344,7 @@ namespace LeadShineDemo.ViewModels
         bool[] homed = new bool[3];
         bool collect = false;
         KeyboardListener Listener = new KeyboardListener();
+        MouseListener MListener = new MouseListener();
         List<KeyInfo> keymap;
         List<Keycode> keycodes;
         private short res;
@@ -399,6 +433,8 @@ namespace LeadShineDemo.ViewModels
             }
             Listener.KeyDown += new RawKeyEventHandler(KeyDown);
             Listener.KeyUp += new RawKeyEventHandler(KeyUp);
+            Listener.trapped = true;
+            MListener.MouseAction += new EventHandler<RawMouseEventArgs>(MouseAction1);
             #endregion
             AppLoadedEventCommand = new DelegateCommand(new Action(this.AppLoadedEventCommandExecute));
             AppClosedEventCommand = new DelegateCommand(new Action(this.AppClosedEventCommandExecute));
@@ -417,6 +453,14 @@ namespace LeadShineDemo.ViewModels
             GetSelfWeightValueCommand = new DelegateCommand(new Action(this.GetSelfWeightValueCommandExecute));
             OperateButtonCommand = new DelegateCommand<object>(new Action<object>(this.OperateButtonCommandCommandExecute));
             ResetCommand = new DelegateCommand(new Action(this.ResetCommandExecute));
+        }
+
+        private void MouseAction1(object sender, RawMouseEventArgs e)
+        {
+            //throw new NotImplementedException();
+            MouseMessage = e.Message.ToString();
+            MouseX = e.Point.x;
+            MouseY = e.Point.y;
         }
 
         private void ResetCommandExecute()
@@ -538,6 +582,7 @@ namespace LeadShineDemo.ViewModels
                     Res = LTDMC.dmc_write_outbit(_CardID, (ushort)i, 1);
                 }
                 LTDMC.dmc_board_close();
+                Listener.Dispose();
             }
             catch { }
         }

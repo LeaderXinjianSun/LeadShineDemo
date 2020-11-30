@@ -24,5 +24,25 @@
                 </StackPanel>
             </StackPanel>
         </GroupBox>
+        <GroupBox Grid.Column="1" Header="点位">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                </Grid.RowDefinitions>
+                <DataGrid GridLinesVisibility="All" ItemsSource="{Binding KeyMotions}" AutoGenerateColumns="False" SelectedItem="{Binding SelectedKeyMotion}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding ID}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="X" Binding="{Binding X}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Y" Binding="{Binding Y}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Z" Binding="{Binding Z}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="KeyName" Binding="{Binding KeyName}"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <StackPanel Grid.Row="1">
+                    <Button Content="保存" HorizontalAlignment="Right" Margin="10,1" Command="{Binding KeyMotionSaveCommand}"></Button>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
     </Grid>
 </UserControl>

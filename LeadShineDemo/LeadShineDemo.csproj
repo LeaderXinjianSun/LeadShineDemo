@@ -270,6 +270,7 @@
     <Compile Include="Models\LTDMC.cs" />
     <Compile Include="Models\MouseListener.cs" />
     <Compile Include="Models\Utils.cs" />
+    <Compile Include="ViewModels\KeyMotionViewModel.cs" />
     <Compile Include="ViewModels\KeyViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\PointViewModel.cs" />

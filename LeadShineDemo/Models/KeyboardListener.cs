@@ -90,14 +90,19 @@ namespace LeadShineDemo.Model
                     wParam.ToUInt32() == (int)InterceptKeys.KeyEvent.WM_SYSKEYUP)
                 {
                     // Captures the character(s) pressed only on WM_KEYDOWN
-                    chars = InterceptKeys.VKCodeToString((uint)Marshal.ReadInt32(lParam), 
+                    chars = InterceptKeys.VKCodeToString((uint)Marshal.ReadInt32(lParam),
                         (wParam.ToUInt32() == (int)InterceptKeys.KeyEvent.WM_KEYDOWN ||
                         wParam.ToUInt32() == (int)InterceptKeys.KeyEvent.WM_SYSKEYDOWN));
 
                     hookedKeyboardCallbackAsync.BeginInvoke((InterceptKeys.KeyEvent)wParam.ToUInt32(), Marshal.ReadInt32(lParam), chars, null, null);
+                    var aa = Marshal.ReadInt32(lParam);
+                    if (aa == 91)
+                    {
+                        return (System.IntPtr)1;
+                    }
                 }
 
-            return trapped? (System.IntPtr)1: InterceptKeys.CallNextHookEx(hookId, nCode, wParam, lParam);
+            return trapped ? (System.IntPtr)1 : InterceptKeys.CallNextHookEx(hookId, nCode, wParam, lParam);
         }
 
         /// <summary>

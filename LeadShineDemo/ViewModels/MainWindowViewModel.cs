@@ -304,6 +304,28 @@ namespace LeadShineDemo.ViewModels
                 this.RaisePropertyChanged("MouseY");
             }
         }
+        private ObservableCollection<KeyMotionViewModel> keyMotions;
+
+        public ObservableCollection<KeyMotionViewModel> KeyMotions
+        {
+            get { return keyMotions; }
+            set
+            {
+                keyMotions = value;
+                this.RaisePropertyChanged("KeyMotions");
+            }
+        }
+        private KeyMotionViewModel selectedKeyMotion;
+
+        public KeyMotionViewModel SelectedKeyMotion
+        {
+            get { return selectedKeyMotion; }
+            set
+            {
+                selectedKeyMotion = value;
+                this.RaisePropertyChanged("SelectedKeyMotion");
+            }
+        }
 
         #endregion
         #region 方法绑定
@@ -324,6 +346,8 @@ namespace LeadShineDemo.ViewModels
         public DelegateCommand GetSelfWeightValueCommand { get; set; }
         public DelegateCommand<object> OperateButtonCommand { get; set; }
         public DelegateCommand ResetCommand { get; set; }
+        public DelegateCommand Axis_SaveCommand { get; set; }
+        public DelegateCommand KeyMotionSaveCommand { get; set; }
         #endregion
         #region 变量
         ushort _CardID = 0;
@@ -336,6 +360,7 @@ namespace LeadShineDemo.ViewModels
         MouseListener MListener = new MouseListener();
         List<KeyInfo> keymap;
         List<Keycode> keycodes;
+        List<KeyMotionInfo> keymotionmap;
         private short res;
         public short Res
         {
@@ -408,6 +433,7 @@ namespace LeadShineDemo.ViewModels
             Keys = new ObservableCollection<KeyViewModel>();
             keymap = Utils.getKeymap();
             keycodes = Utils.getKeycodes();
+            keymotionmap = Utils.getKeymotionmap();
             foreach (var k in keymap)
             {
                 Keys.Add(new KeyViewModel()
@@ -439,8 +465,22 @@ namespace LeadShineDemo.ViewModels
             });
             Listener.KeyDown += new RawKeyEventHandler(KeyDown);
             Listener.KeyUp += new RawKeyEventHandler(KeyUp);
-            Listener.trapped = true;
             MListener.MouseAction += new EventHandler<RawMouseEventArgs>(MouseAction1);
+            KeyMotions = new ObservableCollection<KeyMotionViewModel>();
+            foreach (var item in keymotionmap)
+            {
+                KeyMotions.Add(new KeyMotionViewModel()
+                {
+                    ID = item.id,
+                    X = item.x,
+                    Y = item.y,
+                    Z = item.z,
+                    VkCode = item.vk_code,
+                    KeyName = Utils.getKeycodeByVkCode(item.vk_code).name,
+                }
+                    );
+            }
+
             #endregion
             AppLoadedEventCommand = new DelegateCommand(new Action(this.AppLoadedEventCommandExecute));
             AppClosedEventCommand = new DelegateCommand(new Action(this.AppClosedEventCommandExecute));
@@ -459,6 +499,31 @@ namespace LeadShineDemo.ViewModels
             GetSelfWeightValueCommand = new DelegateCommand(new Action(this.GetSelfWeightValueCommandExecute));
             OperateButtonCommand = new DelegateCommand<object>(new Action<object>(this.OperateButtonCommandCommandExecute));
             ResetCommand = new DelegateCommand(new Action(this.ResetCommandExecute));
+            Axis_SaveCommand = new DelegateCommand(new Action(this.Axis_SaveCommandExecute));
+            KeyMotionSaveCommand = new DelegateCommand(new Action(this.KeyMotionSaveCommandExecute));
+        }
+
+        private void KeyMotionSaveCommandExecute()
+        {
+            if (SelectedKeyMotion != null)
+            {
+                bool r = Utils.updateMotionData(SelectedKeyMotion.ID,SelectedKeyMotion.X, SelectedKeyMotion.Y,SelectedKeyMotion.Z,SelectedKeyMotion.VkCode);
+                if (r)
+                {
+                    AddMessage($"{SelectedKeyMotion.KeyName}坐标数据更新完成 {SelectedKeyMotion.X},{SelectedKeyMotion.Y}");
+                }
+            }
+        }
+
+        private void Axis_SaveCommandExecute()
+        {
+            for (int i = 0; i < PrefilePos.Count; i++)
+            {
+                Inifile.INIWriteValue(iniParameterPath, "Position", "X" + i.ToString(), PrefilePos[i].X.ToString());
+                Inifile.INIWriteValue(iniParameterPath, "Position", "Y" + i.ToString(), PrefilePos[i].Y.ToString());
+                Inifile.INIWriteValue(iniParameterPath, "Position", "Z" + i.ToString(), PrefilePos[i].Z.ToString());
+            }
+            AddMessage("点坐标保存完成");
         }
 
         private void MouseAction1(object sender, RawMouseEventArgs e)
@@ -554,7 +619,10 @@ namespace LeadShineDemo.ViewModels
             switch (obj.ToString())
             {
                 case "0":
-                    collect = true;
+                    //for (int i = 0; i < keymap.Count; i++)
+                    //{
+                    //    Utils.updateMotionData(i, 0, 0, 0, keymap[i].vk_code);
+                    //}
                     break;
                 default:
                     break;

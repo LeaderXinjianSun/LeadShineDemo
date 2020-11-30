@@ -21,4 +21,12 @@ namespace LeadShineDemo.Model
         public int vk_code;
         public string name;
     }
+    class KeyMotionInfo
+    {
+        public int id;
+        public double x;
+        public double y;
+        public double z;
+        public int vk_code;
+    }
 }

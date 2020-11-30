@@ -304,17 +304,6 @@ namespace LeadShineDemo.ViewModels
                 this.RaisePropertyChanged("MouseY");
             }
         }
-        private String mouseMessage;
-
-        public String MouseMessage
-        {
-            get { return mouseMessage; }
-            set
-            {
-                mouseMessage = value;
-                this.RaisePropertyChanged("MouseMessage");
-            }
-        }
 
         #endregion
         #region 方法绑定
@@ -431,6 +420,23 @@ namespace LeadShineDemo.ViewModels
                     Name = Utils.getKeycodeByVkCode(k.vk_code).name,
                 });
             }
+            Keys.Add(new KeyViewModel() { 
+                Left = 17*10,
+                Top = 26*10,
+                Width = 10*10,
+                Height = 4*10,
+                Pressed = false,
+                Name = "LMOUSE"
+            });
+            Keys.Add(new KeyViewModel()
+            {
+                Left = 27 * 10,
+                Top = 26 * 10,
+                Width = 10 * 10,
+                Height = 4 * 10,
+                Pressed = false,
+                Name = "RMOUSE"
+            });
             Listener.KeyDown += new RawKeyEventHandler(KeyDown);
             Listener.KeyUp += new RawKeyEventHandler(KeyUp);
             Listener.trapped = true;
@@ -457,8 +463,33 @@ namespace LeadShineDemo.ViewModels
 
         private void MouseAction1(object sender, RawMouseEventArgs e)
         {
-            //throw new NotImplementedException();
-            MouseMessage = e.Message.ToString();
+            switch (e.Message)
+            {
+                case MouseEvent.WM_LBUTTONUP:
+                    var mousekey = Keys.FirstOrDefault(key => key.Name == "LMOUSE");
+                    mousekey.Pressed = true;
+                    mousekey.Pressing = false;
+                    break;
+                case MouseEvent.WM_LBUTTONDOWN:
+                    mousekey = Keys.FirstOrDefault(key => key.Name == "LMOUSE");
+                    mousekey.Pressed = false;
+                    mousekey.Pressing = true;
+                    
+                    break;
+                case MouseEvent.WM_RBUTTONUP:
+                    mousekey = Keys.FirstOrDefault(key => key.Name == "RMOUSE");
+                    mousekey.Pressed = true;
+                    mousekey.Pressing = false;
+                    break;
+                case MouseEvent.WM_RBUTTONDOWN:
+                    mousekey = Keys.FirstOrDefault(key => key.Name == "RMOUSE");
+                    mousekey.Pressed = false;
+                    mousekey.Pressing = true;
+                    
+                    break;
+                default:
+                    break;
+            }
             MouseX = e.Point.x;
             MouseY = e.Point.y;
         }
@@ -468,6 +499,7 @@ namespace LeadShineDemo.ViewModels
             foreach (var k in Keys)
             {
                 k.Pressed = false;
+                k.Fail = false;
             }
         }
 

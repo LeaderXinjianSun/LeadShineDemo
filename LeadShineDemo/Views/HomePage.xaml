@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:LeadShineDemo.Views"
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              mc:Ignorable="d" 
-             d:DesignHeight="540" d:DesignWidth="800">
+             d:DesignHeight="708" d:DesignWidth="1024">
     <UserControl.Resources>
         <local:CodeToHex x:Key="CodeToHexConverter"/>
     </UserControl.Resources>
@@ -21,25 +21,24 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid Margin="1">
-            <StackPanel>
-                <Border BorderThickness="1" CornerRadius="4" Padding="3" BorderBrush="LightGray" Height="300" Width="928">
+            <DockPanel>
+                <Border BorderThickness="1" CornerRadius="4" Padding="3" BorderBrush="LightGray" Height="310" Width="660" DockPanel.Dock="Top">
                     <local:KeymapView IsTabStop="False"/>
                 </Border>
-                <Border BorderThickness="1" CornerRadius="4" Padding="3" BorderBrush="LightGray">
+                <Border BorderThickness="1" CornerRadius="4" Padding="3" BorderBrush="LightGray" DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
                     <DockPanel>
-                        <Label Content="{Binding MouseX}" ContentStringFormat="X:{0}"></Label>
-                        <Label Content="{Binding MouseY}" ContentStringFormat="Y:{0}"></Label>
-                        <Label Content="{Binding MouseMessage}"></Label>
-                        <Label Content="{Binding ScanCode, Converter={StaticResource CodeToHexConverter}}" ContentStringFormat="Scan Code: {0}    "/>
-                        <Label Content="{Binding VitualCode, Converter={StaticResource CodeToHexConverter}}" ContentStringFormat="Windows Code: {0}    "/>
-                        <Label Content="{Binding KeyName}" ContentStringFormat="Name: {0}    "/>
+                        <Label Width="80" Content="{Binding MouseX}" ContentStringFormat="X:{0}"></Label>
+                        <Label Width="80" Content="{Binding MouseY}" ContentStringFormat="Y:{0}"></Label>
+                        <Label Width="120" Content="{Binding ScanCode, Converter={StaticResource CodeToHexConverter}}" ContentStringFormat="SCode: {0}    "/>
+                        <Label Width="120" Content="{Binding VitualCode, Converter={StaticResource CodeToHexConverter}}" ContentStringFormat="VCode: {0}    "/>
+                        <Label Width="120" Content="{Binding KeyName}" ContentStringFormat="Name: {0}    "/>
                         <Button Width="100" Content="Reset" Margin="2 2 2 2" IsTabStop="False" DockPanel.Dock="Right"
                         Command="{Binding ResetCommand}"/>
                         <!--<CheckBox Content="Trap all keystrokes" IsChecked="{Binding Path=Trapped, Mode=TwoWay}" 
                           DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Right" IsTabStop="False"/>-->
                     </DockPanel>
                 </Border>
-            </StackPanel>
+            </DockPanel>
 
         </Grid>
         <TextBox Grid.Row="1" VerticalAlignment="Stretch" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Margin="1" x:Name="MsgTextBox" IsReadOnly="True" TextChanged="MsgTextBox_TextChanged"  FontSize="14" Background="Black" FontFamily="宋体" Foreground="White" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Text="{Binding MessageStr}"></TextBox>

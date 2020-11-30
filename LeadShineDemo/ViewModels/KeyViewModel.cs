@@ -75,6 +75,18 @@ namespace LeadShineDemo.ViewModels
                 this.RaisePropertyChanged("Pressing");
             }
         }
+        private bool fail;
+
+        public bool Fail
+        {
+            get { return fail; }
+            set
+            {
+                fail = value;
+                this.RaisePropertyChanged("Fail");
+            }
+        }
+
         private string name;
 
         public string Name

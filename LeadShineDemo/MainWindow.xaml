@@ -9,7 +9,7 @@
         xmlns:local="clr-namespace:LeadShineDemo"
         mc:Ignorable="d"
         Title="{Binding Version,StringFormat=LeadShineDemo {0}}" Icon="LeadShineicon_20201104_64.ico"
-        Height="600" Width="800" WindowStartupLocation ="CenterScreen" ResizeMode="CanResize" Closing="MetroWindow_Closing">
+        Height="768" Width="1024" WindowStartupLocation ="CenterScreen" ResizeMode="CanResize" Closing="MetroWindow_Closing">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding AppLoadedEventCommand}" />

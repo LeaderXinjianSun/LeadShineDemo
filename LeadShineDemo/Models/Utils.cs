@@ -23,7 +23,7 @@ namespace LeadShineDemo.Model
 
         private db_helper()
         {
-            mConnection = new SQLiteConnection("DataSource=kbd-db.sqlite;Version=3");
+            mConnection = new SQLiteConnection("DataSource=lenovo01-kbd-db.sqlite;Version=3");
         }
 
         public Dictionary<int, Keycode> getKeycodes()

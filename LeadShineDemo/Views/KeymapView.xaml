@@ -33,7 +33,7 @@
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type Button}">
                                             <Grid x:Name="grid">
-                                                <Border x:Name="border" CornerRadius="4" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}">
+                                                <Border x:Name="border" CornerRadius="4" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
                                                     <Viewbox StretchDirection="DownOnly">
                                                         <ContentPresenter HorizontalAlignment="Center"
                                                                       VerticalAlignment="Center"/>
@@ -49,6 +49,9 @@
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Pressing}" Value="True">
                                         <Setter Property="BorderBrush" Value="Blue"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Fail}" Value="True">
+                                        <Setter Property="Background" Value="Red"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

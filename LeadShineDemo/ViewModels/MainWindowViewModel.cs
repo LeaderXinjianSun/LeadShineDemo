@@ -951,6 +951,7 @@ namespace LeadShineDemo.ViewModels
         private async void Run()
         {
             bool DMC5400ADi_0 = false;int pindex = 0;
+            double weight1 = 0;
             while (true)
             {
                 try
@@ -1015,9 +1016,9 @@ namespace LeadShineDemo.ViewModels
                                 stepnum = 3;
                                 break;
                             case 3:
-                                Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
-                                Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
-                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 10000, 0.01, 0.01, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.2, 0.2, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.2, 0.2, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 50000, 0.01, 0.01, 1000);
 
                                 Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[1].X * 100), 1);
                                 Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[1].Y * 100), 1);
@@ -1064,9 +1065,9 @@ namespace LeadShineDemo.ViewModels
 
                                 break;
                             case 12:
-                                Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
-                                Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
-                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 10000, 0.01, 0.01, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 10000, 0.2, 0.2, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 10000, 0.2, 0.2, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 10000, 0.1, 0.1, 1000);
 
                                 Res = LTDMC.dmc_pmove(_CardID, 0, (int)((PrefilePos[1].X + KeyMotions[pindex].X) * 100), 1);
                                 Res = LTDMC.dmc_pmove(_CardID, 1, (int)((PrefilePos[1].Y + KeyMotions[pindex].Y) * 100), 1);
@@ -1084,13 +1085,15 @@ namespace LeadShineDemo.ViewModels
                                 Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 1000, 0.1, 0.1, 1000);
 
                                 Res = LTDMC.dmc_pmove(_CardID, 2, (int)((PrefilePos[1].Z - 2) * 100), 1);
-                                Task.Run(()=> {
+                                Task.Run(() =>
+                                {
                                     SeriesCollection1[0].Values.Clear();
                                     while (collect)
                                     {
                                         double _value1 = 0;
                                         LTDMC.nmc_get_ad_input(_CardID, 1, 0, ref _value1);
-                                        SeriesCollection1[0].Values.Add((double)((_value1 - SelfWeightValue) / 16 * 1000));
+                                        weight1 = (double)((_value1 - SelfWeightValue) / 16 * 1000);
+                                        SeriesCollection1[0].Values.Add(weight1);
                                         System.Threading.Thread.Sleep(1);
                                     }
                                 });
@@ -1115,10 +1118,17 @@ namespace LeadShineDemo.ViewModels
                                 break;
                             case 16:
                                 await Task.Delay(100);
-                                if (WeightValue < 20 || activekeycode != KeyMotions[pindex].VkCode)
+                                if (weight1 < 20)
                                 {
                                     var item = Keys.FirstOrDefault(t => t.Name == KeyMotions[pindex].KeyName);
                                     item.Fail = true;
+                                    AddMessage(item.Name + " 下压压力值 < 20g");
+                                }
+                                if (activekeycode != KeyMotions[pindex].VkCode)
+                                {
+                                    var item = Keys.FirstOrDefault(t => t.Name == KeyMotions[pindex].KeyName);
+                                    item.Fail = true;
+                                    AddMessage(item.Name + " 下压信号不良");
                                 }
                                 stepnum = 17;
                                 break;
@@ -1137,10 +1147,17 @@ namespace LeadShineDemo.ViewModels
                                 break;
                             case 19:
                                 await Task.Delay(100);
-                                if (WeightValue >= 20 || activekeycode != KeyMotions[pindex].VkCode)
+                                if (weight1 >= 20)
                                 {
                                     var item = Keys.FirstOrDefault(t => t.Name == KeyMotions[pindex].KeyName);
                                     item.Fail = true;
+                                    AddMessage(item.Name + " 抬起压力值 > 20g");
+                                }
+                                if (activekeycode != KeyMotions[pindex].VkCode)
+                                {
+                                    var item = Keys.FirstOrDefault(t => t.Name == KeyMotions[pindex].KeyName);
+                                    item.Fail = true;
+                                    AddMessage(item.Name + " 抬起信号不良");
                                 }
                                 collect = false;
                                 pindex++;

@@ -33,10 +33,10 @@
                 <DataGrid GridLinesVisibility="All" ItemsSource="{Binding KeyMotions}" AutoGenerateColumns="False" SelectedItem="{Binding SelectedKeyMotion}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" Binding="{Binding ID}"></DataGridTextColumn>
-                        <DataGridTextColumn Header="X" Binding="{Binding X}"></DataGridTextColumn>
-                        <DataGridTextColumn Header="Y" Binding="{Binding Y}"></DataGridTextColumn>
-                        <DataGridTextColumn Header="Z" Binding="{Binding Z}"></DataGridTextColumn>
-                        <DataGridTextColumn Header="KeyName" Binding="{Binding KeyName}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="X" Width="80" Binding="{Binding X}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Y" Width="80" Binding="{Binding Y}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Z" Width="80" Binding="{Binding Z}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="KeyName" Width="120" Binding="{Binding KeyName}"></DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
                 <StackPanel Grid.Row="1">

@@ -64,7 +64,7 @@
                                               Height="40"
                                               Kind="Github" />
                     </Button>
-                    <Button Grid.Column="1" FontSize="18" Background="Red" Content="E-&#13;STOP" Command="{Binding StopCommand}" Margin="10"></Button>
+                    
                     <Button Grid.Column="2" FontSize="18" Style="{StaticResource MahApps.Styles.Button.Square.Accent}" Content="采集" Margin="10" Command="{Binding OperateButtonCommand}" CommandParameter="0"></Button>
                 </Grid>
             </GroupBox>

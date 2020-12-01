@@ -342,7 +342,6 @@ namespace LeadShineDemo.ViewModels
         public DelegateCommand<object> Axis_GOCommand { get; set; }
         public DelegateCommand<object> OutActionCommand { get; set; }
         public DelegateCommand FuncCommand { get; set; }
-        public DelegateCommand StopCommand { get; set; }
         public DelegateCommand GetSelfWeightValueCommand { get; set; }
         public DelegateCommand<object> OperateButtonCommand { get; set; }
         public DelegateCommand ResetCommand { get; set; }
@@ -355,7 +354,7 @@ namespace LeadShineDemo.ViewModels
         bool runflag = false;
         int stepnum = 0;
         bool[] homed = new bool[3];
-        bool collect = false;
+        bool collect = false;bool start = false;int activekeycode = -1;
         KeyboardListener Listener = new KeyboardListener();
         MouseListener MListener = new MouseListener();
         List<KeyInfo> keymap;
@@ -495,7 +494,7 @@ namespace LeadShineDemo.ViewModels
             Axis_GOCommand = new DelegateCommand<object>(new Action<object>(this.Axis_GOCommandExecute));
             OutActionCommand = new DelegateCommand<object>(new Action<object>(this.OutActionCommandExecute));
             FuncCommand = new DelegateCommand(new Action(this.FuncCommandExecute));
-            StopCommand = new DelegateCommand(new Action(this.StopCommandExecute));
+            
             GetSelfWeightValueCommand = new DelegateCommand(new Action(this.GetSelfWeightValueCommandExecute));
             OperateButtonCommand = new DelegateCommand<object>(new Action<object>(this.OperateButtonCommandCommandExecute));
             ResetCommand = new DelegateCommand(new Action(this.ResetCommandExecute));
@@ -510,7 +509,7 @@ namespace LeadShineDemo.ViewModels
                 bool r = Utils.updateMotionData(SelectedKeyMotion.ID,SelectedKeyMotion.X, SelectedKeyMotion.Y,SelectedKeyMotion.Z,SelectedKeyMotion.VkCode);
                 if (r)
                 {
-                    AddMessage($"{SelectedKeyMotion.KeyName}坐标数据更新完成 {SelectedKeyMotion.X},{SelectedKeyMotion.Y}");
+                    MessageBox.Show($"{SelectedKeyMotion.KeyName}坐标数据更新完成 {SelectedKeyMotion.X},{SelectedKeyMotion.Y}", "消息", MessageBoxButtons.OK);
                 }
             }
         }
@@ -534,23 +533,25 @@ namespace LeadShineDemo.ViewModels
                     var mousekey = Keys.FirstOrDefault(key => key.Name == "LMOUSE");
                     mousekey.Pressed = true;
                     mousekey.Pressing = false;
+                    activekeycode = keycodes.FirstOrDefault(t=> t.name == "LMOUSE").vk_code;
                     break;
                 case MouseEvent.WM_LBUTTONDOWN:
                     mousekey = Keys.FirstOrDefault(key => key.Name == "LMOUSE");
                     mousekey.Pressed = false;
                     mousekey.Pressing = true;
-                    
+                    activekeycode = keycodes.FirstOrDefault(t => t.name == "LMOUSE").vk_code;
                     break;
                 case MouseEvent.WM_RBUTTONUP:
                     mousekey = Keys.FirstOrDefault(key => key.Name == "RMOUSE");
                     mousekey.Pressed = true;
                     mousekey.Pressing = false;
+                    activekeycode = keycodes.FirstOrDefault(t => t.name == "RMOUSE").vk_code;
                     break;
                 case MouseEvent.WM_RBUTTONDOWN:
                     mousekey = Keys.FirstOrDefault(key => key.Name == "RMOUSE");
                     mousekey.Pressed = false;
                     mousekey.Pressing = true;
-                    
+                    activekeycode = keycodes.FirstOrDefault(t => t.name == "RMOUSE").vk_code;
                     break;
                 default:
                     break;
@@ -583,6 +584,7 @@ namespace LeadShineDemo.ViewModels
                     break;
                 }
             }
+            activekeycode = args.VKCode;
         }
 
         private void KeyDown(object sender, RawKeyEventArgs args)
@@ -612,6 +614,7 @@ namespace LeadShineDemo.ViewModels
                     KeyName = keycode.name;
                 }
             }
+            activekeycode = args.VKCode;
         }
 
         private void OperateButtonCommandCommandExecute(object obj)
@@ -619,10 +622,10 @@ namespace LeadShineDemo.ViewModels
             switch (obj.ToString())
             {
                 case "0":
-                    //for (int i = 0; i < keymap.Count; i++)
-                    //{
-                    //    Utils.updateMotionData(i, 0, 0, 0, keymap[i].vk_code);
-                    //}
+                    if (stepnum == 5)
+                    {
+                        start = true;
+                    }                    
                     break;
                 default:
                     break;
@@ -635,15 +638,6 @@ namespace LeadShineDemo.ViewModels
             LTDMC.nmc_get_ad_input(_CardID, 1, 0, ref _value1);
             SelfWeightValue = _value1;
             Inifile.INIWriteValue(iniParameterPath, "System", "SelfWeightValue", SelfWeightValue.ToString());
-        }
-
-        private void StopCommandExecute()
-        {
-            runflag = false;
-            Res = LTDMC.dmc_stop(_CardID, 0, 0);
-            Res = LTDMC.dmc_stop(_CardID, 1, 0);
-            Res = LTDMC.dmc_stop(_CardID, 2, 0);
-            stepnum = -1;
         }
 
         private void FuncCommandExecute()
@@ -683,6 +677,7 @@ namespace LeadShineDemo.ViewModels
                 }
                 LTDMC.dmc_board_close();
                 Listener.Dispose();
+                MListener.Dispose();
             }
             catch { }
         }
@@ -955,7 +950,7 @@ namespace LeadShineDemo.ViewModels
         }
         private async void Run()
         {
-            bool DMC5400ADi_0 = false;
+            bool DMC5400ADi_0 = false;int pindex = 0;
             while (true)
             {
                 try
@@ -1007,8 +1002,6 @@ namespace LeadShineDemo.ViewModels
                                 //Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[0].X * 100), 1);
                                 //Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[0].Y * 100), 1);
                                 //Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[0].Z * 100), 1);
-
-                                //stepnum = 1;
                                 stepnum = 3;
                                 break;
                             case 1:
@@ -1028,7 +1021,6 @@ namespace LeadShineDemo.ViewModels
 
                                 Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[1].X * 100), 1);
                                 Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[1].Y * 100), 1);
-                                //Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[1].Z * 100), 1);
                                 Res = LTDMC.dmc_pmove(_CardID, 2, (int)(0), 1);
 
                                 stepnum = 4;
@@ -1040,42 +1032,55 @@ namespace LeadShineDemo.ViewModels
                                 }
                                 break;
                             case 5:
-                                await Task.Delay(100);
-                                stepnum = 6;
+                                if (start)
+                                {
+                                    stepnum = 6;
+                                    pindex = 0;
+                                    ResetCommandExecute();
+                                    start = false;
+                                }
                                 break;
                             case 6:
-                                //Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
-                                //Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
-                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 50000, 0.1, 0.1, 1000);
-
-                                //Res = LTDMC.dmc_pmove(_CardID, 0, (int)(PrefilePos[2].X * 100), 1);
-                                //Res = LTDMC.dmc_pmove(_CardID, 1, (int)(PrefilePos[2].Y * 100), 1);
+                                //Z轴降下来
+                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 10000, 0.1, 0.1, 1000);
                                 Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[1].Z * 100), 1);
-
                                 stepnum = 7;
                                 break;
                             case 7:
-                                //if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
                                 if (LTDMC.dmc_check_done(_CardID, 2) == 1)
                                 {
                                     stepnum = 8;
-                                    await Task.Delay(100);
-                                    collect = false;
                                 }
                                 break;
                             case 8:
-                                if (true)
+                                if (pindex < KeyMotions.Count)
                                 {
-                                    stepnum = 9;
-                                    await Task.Delay(1000);
-                                    collect = true;
+                                    stepnum = 12;
                                 }
                                 else
                                 {
-                                    await Task.Delay(100);
+                                    stepnum = 0;
+                                }
+
+                                break;
+                            case 12:
+                                Res = LTDMC.dmc_set_profile(_CardID, 0, 200, 50000, 0.1, 0.1, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 1, 200, 50000, 0.1, 0.1, 1000);
+                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 10000, 0.01, 0.01, 1000);
+
+                                Res = LTDMC.dmc_pmove(_CardID, 0, (int)((PrefilePos[1].X + KeyMotions[pindex].X) * 100), 1);
+                                Res = LTDMC.dmc_pmove(_CardID, 1, (int)((PrefilePos[1].Y + KeyMotions[pindex].Y) * 100), 1);
+                                Res = LTDMC.dmc_pmove(_CardID, 2, (int)(PrefilePos[1].Z * 100), 1);
+                                stepnum = 13;
+                                break;
+                            case 13:
+                                if (LTDMC.dmc_check_done(_CardID, 0) == 1 && LTDMC.dmc_check_done(_CardID, 1) == 1 && LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                {
+                                    stepnum = 14;
+                                    collect = true;
                                 }
                                 break;
-                            case 9:
+                            case 14:
                                 Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 1000, 0.1, 0.1, 1000);
 
                                 Res = LTDMC.dmc_pmove(_CardID, 2, (int)((PrefilePos[1].Z - 2) * 100), 1);
@@ -1089,17 +1094,57 @@ namespace LeadShineDemo.ViewModels
                                         System.Threading.Thread.Sleep(1);
                                     }
                                 });
-                                stepnum = 10;
+                                activekeycode = -1;
+                                stepnum = 15;
                                 break;
-                            case 10:
+                            case 15:
                                 if (LTDMC.dmc_check_done(_CardID, 2) == 1)
                                 {
-                                    stepnum = 11;
+                                    stepnum = 16;
+                                }
+                                else
+                                {
+                                    if (WeightValue > 80)
+                                    {
+                                        Res = LTDMC.dmc_stop(_CardID, 2, 0);
+                                        var item = Keys.FirstOrDefault(t => t.Name == KeyMotions[pindex].KeyName);
+                                        item.Fail = true;
+                                        stepnum = 17;
+                                    }
                                 }
                                 break;
-                            case 11:
+                            case 16:
                                 await Task.Delay(100);
-                                stepnum = 6;
+                                if (WeightValue < 20 || activekeycode != KeyMotions[pindex].VkCode)
+                                {
+                                    var item = Keys.FirstOrDefault(t => t.Name == KeyMotions[pindex].KeyName);
+                                    item.Fail = true;
+                                }
+                                stepnum = 17;
+                                break;
+                            case 17:
+                                Res = LTDMC.dmc_set_profile(_CardID, 2, 200, 1000, 0.1, 0.1, 1000);
+
+                                Res = LTDMC.dmc_pmove(_CardID, 2, (int)((PrefilePos[1].Z) * 100), 1);
+                                activekeycode = -1;
+                                stepnum = 18;
+                                break;
+                            case 18:
+                                if (LTDMC.dmc_check_done(_CardID, 2) == 1)
+                                {
+                                    stepnum = 19;
+                                }
+                                break;
+                            case 19:
+                                await Task.Delay(100);
+                                if (WeightValue >= 20 || activekeycode != KeyMotions[pindex].VkCode)
+                                {
+                                    var item = Keys.FirstOrDefault(t => t.Name == KeyMotions[pindex].KeyName);
+                                    item.Fail = true;
+                                }
+                                collect = false;
+                                pindex++;
+                                stepnum = 8;
                                 break;
                             default:
                                 break;
@@ -1112,6 +1157,7 @@ namespace LeadShineDemo.ViewModels
                         {
                             runflag = false;
                             collect = false;
+                            start = false;
                             Res = LTDMC.dmc_stop(_CardID, 0, 0);
                             Res = LTDMC.dmc_stop(_CardID, 1, 0);
                             Res = LTDMC.dmc_stop(_CardID, 2, 0);
